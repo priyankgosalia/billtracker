@@ -5,8 +5,8 @@
         .module('billApp')
         .factory('CompanyService', CompanyService);
  
-    CompanyService.$inject = ['$http'];
-    function CompanyService($http) {
+    CompanyService.$inject = ['$http','AuthenticationService'];
+    function CompanyService($http,AuthenticationService) {
         var cmservice = this;
         cmservice.getCompanyList = getCompanyList;
         cmservice.addCompany = addCompany;

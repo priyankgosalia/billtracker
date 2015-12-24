@@ -9,6 +9,7 @@ package com.asian.billmanager.ws.json;
 public class LoginResponse {
 	boolean result;
 	String message;
+	int userId;
 	String userFirstName;
 	
 	public LoginResponse(boolean result) {
@@ -40,12 +41,15 @@ public class LoginResponse {
 	public boolean isResult() {
 		return result;
 	}
+	
 	public void setResult(boolean result) {
 		this.result = result;
 	}
+	
 	public String getMessage() {
 		return message;
 	}
+	
 	public void setMessage(String message) {
 		this.message = message;
 	}
@@ -56,5 +60,13 @@ public class LoginResponse {
 
 	public void setUserFirstName(String userFirstName) {
 		this.userFirstName = userFirstName;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 }

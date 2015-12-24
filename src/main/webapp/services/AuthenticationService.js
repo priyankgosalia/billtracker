@@ -16,6 +16,8 @@
         service.GetUserFirstName = GetUserFirstName;
         service.GetUsername = GetUsername;
         service.SetUsername = SetUsername;
+        service.SetUserId = SetUserId;
+        service.GetUserId = GetUserId;
  
         return service;
  
@@ -35,6 +37,15 @@
         function SetUserFirstName(firstName) {
         	$rootScope.globals.userFirstName = firstName;
         	$window.sessionStorage.userFirstName = firstName;
+        }
+        
+        function SetUserId(userId) {
+        	$rootScope.globals.userId = userId;
+        	$window.sessionStorage.userId = userId;
+        }
+        
+        function GetUserId() {
+        	return $window.sessionStorage.userId;
         }
         
         function GetUserFirstName() {
@@ -61,7 +72,6 @@
         }
  
         function ClearCredentials() {
-        	console.log("Invoking Clear()");
             $rootScope.globals = {};
             $cookieStore.remove('globals');
             $http.defaults.headers.common.Authorization = 'Basic';

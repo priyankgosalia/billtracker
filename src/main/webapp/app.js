@@ -38,7 +38,9 @@
             })
             
             .when('/about', {
-                templateUrl: 'pages/about.html'
+            	controller: 'AboutController',
+                templateUrl: 'pages/about.html',
+                controllerAs: 'am'
             })
  
             .otherwise({ redirectTo: '/login' });

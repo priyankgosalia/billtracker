@@ -2,11 +2,14 @@ package com.asian.billmanager.ws.service;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.json.JSONException;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +47,8 @@ public class CompanyService extends Service {
 	@GET
 	@Path("getCompanyList")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Company> getCompanyList() throws JSONException {
+	public List<Company> getCompanyList(@Context HttpServletRequest request) throws JSONException {
+		logger.info("Retrieving company list from database");
 		List<Company> list = new LinkedList<Company>();
 		List<CompanyBO> compListFromDB = companyDAO.getCompanyList();
 		if (compListFromDB!=null && compListFromDB.size()>0) {
@@ -67,10 +71,10 @@ public class CompanyService extends Service {
 			return new ServiceResponse(-1,"The Company '"+name+"' is already present in the system.");
 		} else {
 			if (companyDAO.addCompany(name) == 1) {
-				logger.info("Added new company '"+name+"'. successfully.");
+				logger.info("Added new company '"+name+"' successfully.");
 				return new ServiceResponse(200,name+" "+MSG_ADD_COMP_SUCCESS);
 			} else {
-				logger.info("Failed to add company '"+name+"'. due to database error.");
+				logger.info("Failed to add company '"+name+"' due to database error.");
 				return new ServiceResponse(201,MSG_ADD_COMP_FAIL);
 			}
 		}

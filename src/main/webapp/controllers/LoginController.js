@@ -16,7 +16,6 @@
  
         (function initController() {
             // reset login status
-        	console.log("Init called for LoginController")
             AuthenticationService.ClearCredentials();
         })();
  
@@ -27,6 +26,7 @@
                     AuthenticationService.SetCredentials(vm.username, vm.password);
                     AuthenticationService.SetUsername(vm.username);
                     AuthenticationService.SetUserFirstName(response.userFirstName);
+                    AuthenticationService.SetUserId(response.userId);
                     vm.loginFailure = false;
                     $location.path('/');
                 } else {

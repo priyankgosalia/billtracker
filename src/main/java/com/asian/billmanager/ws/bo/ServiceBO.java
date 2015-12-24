@@ -1,12 +1,12 @@
 package com.asian.billmanager.ws.bo;
 
 /*
- * CompanyBO
+ * ServiceBO
  * 
  * Created: 24-DEC-2015
  * Author:  Priyank Gosalia <priyankmg@gmail.com>
  */
-public class CompanyBO {
+public class ServiceBO {
 	private int id;
 	private String name;
 	
@@ -38,10 +38,10 @@ public class CompanyBO {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof CompanyBO)) {
+		if (!(obj instanceof ServiceBO)) {
 			return false;
 		}
-		CompanyBO other = (CompanyBO) obj;
+		ServiceBO other = (ServiceBO) obj;
 		if (id != other.id) {
 			return false;
 		}
@@ -54,6 +54,4 @@ public class CompanyBO {
 		}
 		return true;
 	}
-	
-	
 }

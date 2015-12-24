@@ -1,9 +1,11 @@
 package com.asian.billmanager.ws.service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.json.JSONException;
 import org.apache.logging.log4j.Logger;
@@ -44,8 +46,8 @@ public class LoginService extends Service {
 	@Path("auth")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public LoginResponse authenticate(LoginRequest request)
-			throws JSONException {
+	public LoginResponse authenticate(LoginRequest request,
+									@Context HttpServletRequest req) throws JSONException {
 		final String username = request.getUsername();
 		final String password = request.getPassword();
 		LoginResponse response = null;
@@ -58,8 +60,11 @@ public class LoginService extends Service {
 				if (usermd5!=null && u.getPassword()!=null) {
 					if (u.getPassword().equals(usermd5)) {
 						logger.info("Login successful for user '"+username+"'.");
-						response = LoginResponse.getSuccessResponseWithMessage("Login Successful.");
+						response = LoginResponse.getSuccessResponseWithMessage("Login successful.");
 						response.setUserFirstName(u.getFirstName());
+						response.setUserId(u.getId());
+						req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID, u.getId());
+						req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_NAME, u.getUsername());
 					} else {
 						logger.error("Login failed for user '"+username+"' due to invalid password.");
 						response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
@@ -73,8 +78,7 @@ public class LoginService extends Service {
 			}
 		} else {
 			response = LoginResponse.getFailureResponseWithMessage(MSG_INSUFFICIENT_CREDENTIALS);
-		}		
-		
+		}
 		return response;
 	}
 }

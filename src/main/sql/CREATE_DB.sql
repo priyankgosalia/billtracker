@@ -27,8 +27,20 @@ CREATE TABLE `btrack`.`audit_logins` (
       ON UPDATE CASCADE ON DELETE CASCADE,
 ) ENGINE = InnoDB;
 
-CREATE TABLE `btrack`.`audit_services` (
-    `service_name` CHAR(128) NOT NULL,
-    `count` INT NOT NULL,
+CREATE TABLE `btrack`.`audit_services_def` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `name` CHAR(128) NOT NULL,
     PRIMARY KEY (id,name)
+) ENGINE = InnoDB;
+
+CREATE TABLE `btrack`.`audit_services` (
+	`service_id` INT NOT NULL,
+	`user_id` INT NOT NULL,
+    `invocation_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id)
+      REFERENCES users(id)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (service_id)
+      REFERENCES audit_services_def(id)
+      ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB;
