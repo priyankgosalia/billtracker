@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
+
+import com.asian.billmanager.ws.dao.AuditDAO;
 import com.asian.billmanager.ws.dao.UserDAO;
 import com.asian.billmanager.ws.json.LoginRequest;
 import com.asian.billmanager.ws.json.LoginResponse;
@@ -32,9 +34,11 @@ public class LoginService extends Service {
 	private static final String MSG_INSUFFICIENT_CREDENTIALS 	= "Insufficient credentials provided.";
 
 	private UserDAO userDAO;
+	private AuditDAO auditDAO;
 	
-	public LoginService(UserDAO userDao) {
+	public LoginService(UserDAO userDao, AuditDAO auditDao) {
 		this.userDAO = userDao;
+		this.auditDAO = auditDao;
 	}
 	
 	@Override
@@ -65,9 +69,11 @@ public class LoginService extends Service {
 						response.setUserId(u.getId());
 						req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID, u.getId());
 						req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_NAME, u.getUsername());
+						auditDAO.addLoginLog(u.getId(), 0);
 					} else {
 						logger.error("Login failed for user '"+username+"' due to invalid password.");
 						response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
+						auditDAO.addLoginLog(u.getId(), -1);
 					}
 				} else {
 					response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);

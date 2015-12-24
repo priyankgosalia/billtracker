@@ -6,6 +6,7 @@
 	<packaging>war</packaging>
 	<version>0.0.1</version>
 	<name>Asian Infotel Bill Management WebApp</name>
+	<description>Bill Tracking and Management application developed exclusively for Asian Infotel.</description>
 	<url>http://asian-associates.com/</url>
 	<organization>
 		<name>Asian Infotel Pvt. Ltd.</name>
@@ -195,5 +196,4 @@
         </plugin>
 		</plugins>
 	</build>
-	<description>Bill Tracking and Management application developed exclusively for Asian Infotel.</description>
 </project>

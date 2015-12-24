@@ -21,6 +21,7 @@ public final class AuditDAO extends SuperDAO {
 	private static final String ALL_SERVICES_QUERY 	= "select id, name from btrack.audit_services_def";
 	private static final String SERVICE_DEF_QUERY 	= "insert into btrack.audit_services_def (name) values (:name)";
 	private static final String AUDIT_SERVICES_INSERT_QUERY = "insert into btrack.audit_services (service_id,user_id) values (:service_id,:user_id)";
+	private static final String AUDIT_LOGINS_INSERT_QUERY = "insert into btrack.audit_logins (user_id,login_status) values (:user_id,:login_status)";
 	
 	public AuditDAO(NamedParameterJdbcTemplate template) {
 		this.jdbcTemplate = template;
@@ -40,6 +41,16 @@ public final class AuditDAO extends SuperDAO {
 		paramMap.put("user_id",userId);
 		paramMap.put("service_id",serviceId);
 		if (jdbcTemplate.update(AUDIT_SERVICES_INSERT_QUERY,paramMap)>0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean addLoginLog(Integer userId, int status) {
+		Map<String, Object> paramMap = new HashMap<String,Object>();
+		paramMap.put("user_id",userId);
+		paramMap.put("login_status",status);
+		if (jdbcTemplate.update(AUDIT_LOGINS_INSERT_QUERY,paramMap)>0) {
 			return true;
 		}
 		return false;

@@ -19,12 +19,12 @@ CREATE TABLE `btrack`.`company` (
 
 -- Audit Tables
 CREATE TABLE `btrack`.`audit_logins` (
-    `user_id` INT NOT NULL AUTO_INCREMENT,
-    `success` INT NOT NULL,
-    `failure` INT NOT NULL,
+    `user_id` INT NOT NULL,
+    `login_status` INT NOT NULL,
+    `login_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id)
       REFERENCES users(id)
-      ON UPDATE CASCADE ON DELETE CASCADE,
+      ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE `btrack`.`audit_services_def` (

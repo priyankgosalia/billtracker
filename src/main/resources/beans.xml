@@ -47,6 +47,9 @@
 		<constructor-arg>
 			<ref bean="userDao" />
 		</constructor-arg>
+		<constructor-arg>
+			<ref bean="auditDao" />
+		</constructor-arg>
 	</bean>
 	
 	<bean id="companyService" class="com.asian.billmanager.ws.service.CompanyService">
