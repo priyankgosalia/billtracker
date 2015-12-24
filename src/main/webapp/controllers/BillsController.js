@@ -6,9 +6,9 @@
     'use strict';
  
     angular.module('billApp').controller('BillsController', BillsController);
-    BillsController.$inject = ['$location', '$scope', 'CompanyService', 'AuthenticationService'];
+    BillsController.$inject = ['$location', '$scope', 'CompanyService', 'AuthenticationService', '$window', 'ngDialog'];
 	
-    function BillsController($location, $scope, CompanyService, AuthenticationService) {
+    function BillsController($location, $scope, CompanyService, AuthenticationService, $window, ngDialog) {
 	   	var cmp = {};
 	   	cmp.getCompanyList = getCompanyList;
 	   	cmp.addCompany = addCompany;
@@ -35,22 +35,15 @@
         }
         
         function addCompany() {
-        	CompanyService.addCompany(cmp.company,function (response) {
-        		console.log(response);
-                if (response && response.code == 200) {
-                    $scope.companyList = getCompanyList();
-                    $scope.addCompanyResult = response.message;
-                    $scope.addCompanyStatus = "OK";
-                } else {
-                	$scope.addCompanyResult = response.message;
-                    $scope.addCompanyStatus = "ERROR";
-                }
-            });
+        	console.log("foo");
+        	ngDialog.open({ template: 'pages/about.html' });
         }
         
         function logout() {
-        	AuthenticationService.ClearCredentials();
-        	$location.path('/#/login');
+        	if ($window.confirm('Are you sure you want to Logout?')) {
+        		AuthenticationService.ClearCredentials();
+            	$location.path('/#/login');
+        	}
         }
 	}
  

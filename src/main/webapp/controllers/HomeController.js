@@ -20,8 +20,10 @@
         return vm;
         
         function logout() {
-        	AuthenticationService.ClearCredentials();
-        	$location.path('/#/login');
+        	if ($window.confirm('Are you sure you want to Logout?')) {
+        		AuthenticationService.ClearCredentials();
+            	$location.path('/#/login');
+        	}
         }
     }
  

@@ -6,9 +6,9 @@
     'use strict';
  
     angular.module('billApp').controller('CompaniesController', CompaniesController);
-    CompaniesController.$inject = ['$location', '$scope', 'CompanyService', 'AuthenticationService'];
+    CompaniesController.$inject = ['$location', '$scope', 'CompanyService', 'AuthenticationService', '$window'];
 	
-    function CompaniesController($location, $scope, CompanyService, AuthenticationService) {
+    function CompaniesController($location, $scope, CompanyService, AuthenticationService, $window) {
 	   	var cmp = {};
 	   	cmp.getCompanyList = getCompanyList;
 	   	cmp.addCompany = addCompany;
@@ -49,8 +49,10 @@
         }
         
         function logout() {
-        	AuthenticationService.ClearCredentials();
-        	$location.path('/#/login');
+        	if ($window.confirm('Are you sure you want to Logout?')) {
+        		AuthenticationService.ClearCredentials();
+            	$location.path('/#/login');
+        	}
         }
 	}
  

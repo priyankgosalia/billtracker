@@ -42,9 +42,10 @@ public class AuditFilter implements ContainerRequestFilter {
 			Map<String,ServiceBO> serviceList = auditDao.getAllServices();
 			boolean serviceDefPresent = true;
 			if (!serviceList.keySet().contains(serviceName)) {
-				logger.info("Service definition for "+serviceName+"' not present in database.");
+				logger.info("Service definition for "+serviceName+"' is not present in the database.");
 				if (!auditDao.addServiceDef(serviceName)) {
 					serviceDefPresent = false;
+					logger.error("Failed to add service definition for "+serviceName+" to the database.");
 				} else {
 					serviceList = auditDao.getAllServices();
 				}
