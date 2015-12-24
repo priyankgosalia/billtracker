@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+	
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd 
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	<context:annotation-config />
+	<context:component-scan base-package="com.asian.billmanager.ws" />
+	
+	<bean id="ds"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/btrack?autoReconnect=true&amp;useSSL=false" />
+		<property name="username" value="btrack" />
+		<property name="password" value="btrack" />
+	</bean>
+
+	<bean id="jtemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="ds"></constructor-arg>
+	</bean>
+
+	<bean id="userDao" class="com.asian.billmanager.ws.dao.UserDAO">
+		<constructor-arg>
+			<ref bean="jtemplate" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="companyDao" class="com.asian.billmanager.ws.dao.CompanyDAO">
+		<constructor-arg>
+			<ref bean="jtemplate" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="loginService" class="com.asian.billmanager.ws.service.LoginService">
+		<constructor-arg>
+			<ref bean="userDao" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="companyService" class="com.asian.billmanager.ws.service.CompanyService">
+		<constructor-arg>
+			<ref bean="companyDao" />
+		</constructor-arg>
+	</bean>
+</beans>  

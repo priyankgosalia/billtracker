@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="billApp">
+	<head>
+    	<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" />
+    	<link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css" />
+    	<link rel="stylesheet" href="style.css"/>
+    	<script src="angularjs-1.4.8/angular.min.js"></script>
+    	<script src="angularjs-1.4.8/angular-route.min.js"></script>
+    	<script src="angularjs-1.4.8/angular-cookies.min.js"></script>
+    	<script src="angularjs-1.4.8/angular-resource.min.js"></script>
+    	<script src="jquery-1.11.3.min.js"></script>
+    	<script src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+    	<script src="app.js"></script>
+    	<script src="services/AuthenticationService.js"></script>
+    	<script src="services/CompanyService.js"></script>
+    	<script src="controllers/HomeController.js"></script>
+    	<script src="controllers/LoginController.js"></script>
+    	<script src="controllers/CompaniesController.js"></script>
+    	<script src="controllers/BillsController.js"></script>
+    </head>
+    <body>
+        <!-- HEADER AND NAVBAR -->
+        <header>
+            <nav class="navbar navbar-inverse navbar-static-top">
+	            <div class="container-fluid">
+	                <div class="navbar-header">
+	                    <a class="navbar-brand" href="#/"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Asian Infotel - Bill Tracker</a>
+	                </div>
+	
+	                <ul class="nav navbar-nav navbar-right">
+	                    <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+	                    <li><a href="#/about"><i class="fa fa-shield"></i> About</a></li>
+	                </ul>
+	            </div>
+            </nav>
+        </header>
+
+        <!-- MAIN CONTENT AND INJECTED VIEWS -->
+        <div class="container">
+	        <div id="main">
+	        	<div ng-view></div>
+	    	</div>
+		</div>
+    </body>
+    </html>
