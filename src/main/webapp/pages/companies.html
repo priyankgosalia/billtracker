@@ -24,49 +24,54 @@
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
-	<div class="panel panel-default panel-primary">
+	<div class="panel panel-default panel-info">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading">Companies <span ng-if="companyList.length > 0" class="badge">{{companyList.length}}</span></div>
+	  <div class="panel-heading"><h5>Companies <span ng-if="companyList.length > 0" class="badge">{{companyList.length}}</span></h5></div>
 	  <div class="panel-body">
-	    <div ng-if="companyList.length == 0">
-	  		<div class="alert alert-warning alert-dismissible" role="alert">
-	  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	  		You have not added any Company to the system.</div>
-	  	</div>
-	  	<div class="panel panel-default">
-		  <div class="panel-heading"><h3 class="panel-title">Add new Company</h3></div>
-		  <div class="panel-body">
-		    <form class="navbar-form navbar-left" name="form" role="form" ng-submit="cm.addCompany()">	
-					<div ng-class="{ 'has-error': form.company.$dirty && form.company.$error.required }">
-						<div class="form-group" ng-class="{ 'has-error': form.company.$dirty && form.company.$error.required }">
-							<div ng-if="addCompanyStatus == 'OK'">
-								<div class="alert alert-success alert-dismissable" role="alert"><i class="fa fa-check-square"></i>&nbsp;
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									{{addCompanyResult}}
-								</div>
-							</div>
-							<div ng-if="addCompanyStatus == 'ERROR'">
-								<div class="alert alert-danger alert-dismissable" role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									{{addCompanyResult}}
-								</div>
-							</div>
-							<i class="fa fa-briefcase"></i>&nbsp; Company Name &nbsp;<input type="text" name="company" id="company" class="form-control" ng-model="cm.company" required />&nbsp;<button type="submit" ng-disabled="form.$invalid" class="btn btn-sm btn-primary"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
-							
-							<span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Company name is mandatory</span>
-						</div>
-					</div>
-			    </form>
-		  </div>
+	  	<div class="container-fluid">
+		  	<div ng-if="companyList.length == 0">
+		  		<div class="alert alert-warning alert-dismissible" role="alert">
+		  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		  		You have not added any Company to the system.</div>
+		  	</div>
 		</div>
+	  	<nav class="navbar navbar-default">
 	  	
+	  	<form class="navbar-form navbar-left" name="form" role="form" ng-submit="cm.addCompany()">
+	  		<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-addon"><i class="fa fa-search"></i></div>
+					<input type="text" name="searchCompany" id="searchCompany" class="form-control" ng-model="searchCompany" placeholder="Search company" />
+				</div>
+				
+				&nbsp;&nbsp;&nbsp;<div class="input-group">
+					<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
+					<input type="text" name="company" id="company" class="form-control" placeholder="Enter company name" ng-model="cm.company" required />
+				</div>
+				<button type="submit" ng-disabled="form.$invalid" class="btn btn-sm btn-primary"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
+				<span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Company name is mandatory</span>
+			</div>
+		</form>
+		<div ng-if="addCompanyStatus == 'OK'">
+			<div class="alert alert-success " role="alert"><i class="fa fa-check-square"></i>&nbsp;
+			<button type="button" class="close" ></button>
+				{{addCompanyResult}}
+			</div>
+		</div>
+		<div ng-if="addCompanyStatus == 'ERROR'">
+			<div class="alert alert-danger " role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
+				<button type="button" class="close" ></button>
+				{{addCompanyResult}}
+			</div>
+		</div>
+		</nav>
 	  <!-- Table -->
 	  <table ng-if="companyList" class="table table-bordered table-striped">
 	  	<thead>
 	  		<tr>
 	  			<th>
 	  				<a ng-click="sortType = 'name'; sortReverse = !sortReverse">
-				        Company
+				        Companies
 				        <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
 				        <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
 				    </a>
@@ -74,11 +79,10 @@
 	  		</tr>
 	  	</thead>
 	  	<tbody>
-		  	<tr ng-repeat="company in companyList | orderBy:sortType:sortReverse">
+		  	<tr ng-repeat="company in companyList | orderBy:sortType:sortReverse | filter:searchCompany">
 		 		<td>{{ company.name }}</td>
 			</tr>
 		</tbody>
 	  </table>
-	  </div>
 	</div>
 </div>
