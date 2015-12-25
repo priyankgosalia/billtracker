@@ -1,5 +1,6 @@
 package com.asian.billmanager.ws.dao;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,6 +19,16 @@ public class SuperDAO {
 	protected static Long getLong(ResultSet rs, String columnName) throws SQLException {
 		Long val = rs.getLong(columnName);
 		return rs.wasNull() ? Long.valueOf(0) : Long.valueOf(val);
+	}
+	
+	protected static Double getDouble(ResultSet rs, String columnName) throws SQLException {
+		Double val = rs.getDouble(columnName);
+		return rs.wasNull() ? Double.valueOf(0) : Double.valueOf(val);
+	}
+	
+	protected static Date getDate(ResultSet rs, String columnName) throws SQLException {
+		Date val = rs.getDate(columnName);
+		return rs.wasNull() ? null : val;
 	}
 	
 	protected static String getString(ResultSet rs, String columnName) throws SQLException {

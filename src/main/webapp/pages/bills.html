@@ -19,66 +19,44 @@
 	        <li><a href="#/companies"> <i class="fa fa-users"></i>&nbsp; Companies <span class="sr-only">(current)</span></a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
-	        <li><a href="#/" ng-click="cm.logout()"><i class="fa fa-sign-out"></i>&nbsp; Logout</a></li>
+	        <li><a href="#/" ng-click="bm.logout()"><i class="fa fa-sign-out"></i>&nbsp; Logout</a></li>
 	      </ul>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
-	<div class="panel panel-default panel-primary">
+	<div class="panel panel-default panel-info">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading">Bills <span ng-if="companyList.length > 0" class="badge">{{companyList.length}}</span></div>
+	  <div class="panel-heading"><h5>Bills <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h5></div>
 	  <div class="panel-body">
 	    <div ng-if="companyList.length == 0">
 	  		<div class="alert alert-warning alert-dismissible" role="alert">
 	  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	  		You have not added any Company to the system.</div>
+	  		Sorry! No bills!</div>
 	  	</div>
-	  	<div class="panel panel-default">
-		  <div class="panel-heading"><h3 class="panel-title">Add new Company</h3></div>
-		  <div class="panel-body">
-		    <form class="navbar-form navbar-left" name="form" role="form" ng-submit="cm.addCompany()">	
-					<div ng-class="{ 'has-error': form.company.$dirty && form.company.$error.required }">
-						<div class="form-group" ng-class="{ 'has-error': form.company.$dirty && form.company.$error.required }">
-							<div ng-if="addCompanyStatus == 'OK'">
-								<div class="alert alert-success alert-dismissable" role="alert"><i class="fa fa-check-square"></i>&nbsp;
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									{{addCompanyResult}}
-								</div>
-							</div>
-							<div ng-if="addCompanyStatus == 'ERROR'">
-								<div class="alert alert-danger alert-dismissable" role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									{{addCompanyResult}}
-								</div>
-							</div>
-							<i class="fa fa-briefcase"></i>&nbsp; Company Name &nbsp;<input type="text" name="company" id="company" class="form-control" ng-model="cm.company" required />&nbsp;<button type="submit" ng-disabled="form.$invalid" class="btn btn-sm btn-primary"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
-							
-							<span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Company name is mandatory</span>
-						</div>
+	  	<nav class="navbar navbar-default">
+		  	<form class="navbar-form navbar-left" name="form" role="form" ng-submit="bm.addBill()">
+		  		<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-search"></i></div>
+						<input type="text" name="searchBill" id="searchBill" class="form-control" placeholder="Search Bill" ng-model="gridOptions.quickFilterText"/>
 					</div>
-			    </form>
-		  </div>
-		</div>
-	  	
-	  <!-- Table -->
-	  <table ng-if="companyList" class="table table-bordered table-striped">
-	  	<thead>
-	  		<tr>
-	  			<th>
-	  				<a ng-click="sortType = 'name'; sortReverse = !sortReverse">
-				        Company
-				        <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
-				        <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
-				    </a>
-	  			</th>
-	  		</tr>
-	  	</thead>
-	  	<tbody>
-		  	<tr ng-repeat="company in companyList | orderBy:sortType:sortReverse">
-		 		<td>{{ company.name }}</td>
-			</tr>
-		</tbody>
-	  </table>
+					&nbsp;&nbsp;&nbsp;
+					<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;New Bill&nbsp;</button>
+				</div>
+			</form>
+		</nav>
+		<nav class="navbar navbar-default">
+			<form class="navbar-form navbar-left">
+			<div class="input-group">
+				<input type="radio" name="billStatus" value="All" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="All Bills">&nbsp; All Bills</input>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="billStatus" value="Paid" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Paid">&nbsp; Paid</input>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="billStatus" value="Unpaid" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Unpaid">&nbsp; Unpaid</input>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="billStatus" value="DueThisMonth" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Due This Month">&nbsp; Due this month</input>
+			</div>
+			</form>
+		</nav>
+	  	<div ag-grid="gridOptions" class="ag-blue" style="height: 350px; margin-top: 4px;"></div>
+	  
 	  </div>
 	</div>
 </div>

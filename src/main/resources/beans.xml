@@ -37,6 +37,12 @@
 		</constructor-arg>
 	</bean>
 	
+	<bean id="billDao" class="com.asian.billmanager.ws.dao.BillDAO">
+		<constructor-arg>
+			<ref bean="jtemplate" />
+		</constructor-arg>
+	</bean>
+	
 	<bean id="auditDao" class="com.asian.billmanager.ws.dao.AuditDAO">
 		<constructor-arg>
 			<ref bean="jtemplate" />
@@ -55,6 +61,12 @@
 	<bean id="companyService" class="com.asian.billmanager.ws.service.CompanyService">
 		<constructor-arg>
 			<ref bean="companyDao" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="billService" class="com.asian.billmanager.ws.service.BillService">
+		<constructor-arg>
+			<ref bean="billDao" />
 		</constructor-arg>
 	</bean>
 	

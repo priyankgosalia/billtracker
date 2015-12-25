@@ -6,7 +6,7 @@
     'use strict';
  
     var billApp = angular
-        .module('billApp', ['ngRoute', 'ngCookies', 'ngDialog'])
+        .module('billApp', ['ngRoute', 'ngCookies', 'ngDialog', 'agGrid'])
         .config(config)
         .run(run);
  
