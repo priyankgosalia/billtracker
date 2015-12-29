@@ -6,26 +6,29 @@
     'use strict';
  
     angular.module('billApp').controller('BillsController', BillsController);
-    BillsController.$inject = ['$location', '$scope', 'BillService', 'AuthenticationService', '$window', 'ngDialog'];
+    BillsController.$inject = ['$location', '$scope', 'BillService', 'AuthenticationService', 'CompanyService', '$window', 'ngDialog'];
 	
-    function BillsController($location, $scope, BillService, AuthenticationService, $window, ngDialog) {
+    function BillsController($location, $scope, BillService, AuthenticationService, CompanyService, $window, ngDialog) {
 	   	var serv = {};
 	   	serv.getBillsList = getBillsList;
+	   	serv.showAddBillDialog = showAddBillDialog;
 	   	serv.logout = logout;
 	   	serv.AuthenticationService = AuthenticationService;
+	   	serv.CompanyService = CompanyService;
 	   	serv.currentUser = AuthenticationService.GetUsername();
 	   	serv.currentUserFirstName = AuthenticationService.GetUserFirstName();
         getBillsList();
+        $scope.companyList = getCompanyList();
 	    
 	    var columnDefs = [
-	                      {headerName: "Bill No.", field: "id", width: 75, filter: 'number'},
+	                      {headerName: "Bill No.", field: "id", width: 75, filter: 'number', suppressSizeToFit:true},
 	                      {headerName: "Company", field: "company", width: 150, filter: 'set'},
 	                      {headerName: "Location", field: "location", width: 150, filter: 'set'},
 	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set'},
 	                      {headerName: "Addded by", field: "user", width: 90, filter: 'set'},
 	                      {headerName: "Mode", field: "paymentMode", width: 140, filter: 'set'},
 	                      {headerName: "Due Date", field: "dueDate", width: 90, filter: 'set'},
-	                      {headerName: "Status", field: "status", width: 80, filter: 'set', cellStyle: function(params) {
+	                      {headerName: "Status", field: "status", width: 80, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
 	                          if (params.value == "Paid") {
 	                              return {'color': 'darkgreen'};
 	                          } else {
@@ -62,14 +65,25 @@
 	            default: return true;
 	        }
 	    }
-	    $scope.billStatus = "All";
+	    $scope.billStatus = "Unpaid";
+	    
 	    $scope.externalFilterChanged = function () {
 	        // inform the grid that it needs to filter the data
 	        $scope.gridOptions.api.onFilterChanged();
 	    };
-
-
+	    
+	    $scope.ready = function() {
+	    	$scope.gridOptions.api.sizeColumnsToFit();
+	    };
+	    
         return serv;
+        
+        function showAddBillDialog() {
+        	ngDialog.open({
+        	    template: 'pages/addBill.html',
+        	    controller: 'BillsController'
+        	});
+        }
         
         function getBillsList() {
         	BillService.getAllBills(function (response) {
@@ -79,6 +93,17 @@
                 } else {
                 	$scope.billsList = null;
                 }
+            });
+        }
+        
+        function getCompanyList() {
+        	CompanyService.getCompanyList(function (response) {
+                if (response) {
+                    $scope.companyList = response.data;
+                } else {
+                	$scope.companyList = null;
+                }
+                return $scope.companyList;
             });
         }
         

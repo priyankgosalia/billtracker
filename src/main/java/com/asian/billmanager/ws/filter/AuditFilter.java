@@ -53,7 +53,7 @@ public class AuditFilter implements ContainerRequestFilter {
 			if (serviceDefPresent) {
 				ServiceBO svc = serviceList.get(serviceName);
 				if (svc!=null) {
-					logger.info("Recording audit log "+svc.getName()+" for userId="+userId);
+					logger.debug("Recording audit log "+svc.getName()+" for userId="+userId);
 					auditDao.addServiceLog(userId, svc.getId());
 				}
 			}

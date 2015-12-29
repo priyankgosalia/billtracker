@@ -31,6 +31,7 @@
                 } else {
                 	$scope.companyList = null;
                 }
+                return $scope.companyList;
             });
         }
         

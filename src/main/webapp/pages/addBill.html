@@ -1,0 +1,41 @@
+<script>
+	$(document).ready(function() { $('.selectpicker').selectpicker({
+          style: 'btn-info',
+          size: 4 
+         });
+     });
+</script>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			<i class="fa fa-list-alt"></i> &nbsp;&nbsp;Add new Bill
+		</h3>
+	</div>
+	<div class="panel-body">
+		<form name="form" role="form">
+			<div class="form-group">
+				Company: <select class="selectpicker" name="company">
+					<option ng-repeat="company in companyList" value="{{ company.id }}"> {{ company.name }} </option>
+				</select>
+			</div>
+			<label for="location">Location</label>
+			<div class="input-group">
+			  <input type="text" class="form-control" id="location" aria-describedby="basic-addon3">
+			</div>
+			<label for="desc">Description</label>
+			<div class="input-group">
+			  <input type="text" class="form-control" id="desc" aria-describedby="basic-addon3">
+			</div>
+			<label for="desc">Bill Amount</label>
+			<div class="input-group">
+			  <input type="text" class="form-control" id="billamount" aria-describedby="basic-addon3">
+			</div>
+			<div class="input-group">
+			  <span class="input-group-addon" id="basic-addon3">Payment Mode</span>
+			  <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+			</div>
+		</form>
+	</div>
+</div>
+
+

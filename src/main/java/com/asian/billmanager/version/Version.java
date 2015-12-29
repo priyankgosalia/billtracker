@@ -3,7 +3,7 @@ package com.asian.billmanager.version;
 /*
  * Version
  * 
- * This is an auto-generated source file.
+ * DO NOT modify this class. This is an auto-generated source file. 
  *
  */
 public final class Version {
