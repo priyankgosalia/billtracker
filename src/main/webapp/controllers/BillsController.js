@@ -17,11 +17,10 @@
 	   	serv.CompanyService = CompanyService;
 	   	serv.currentUser = AuthenticationService.GetUsername();
 	   	serv.currentUserFirstName = AuthenticationService.GetUserFirstName();
-        getBillsList();
         $scope.companyList = getCompanyList();
 	    
 	    var columnDefs = [
-	                      {headerName: "Bill No.", field: "id", width: 75, filter: 'number', suppressSizeToFit:true},
+	                      {headerName: "Bill #", field: "id", width: 75, filter: 'number', suppressSizeToFit:true},
 	                      {headerName: "Company", field: "company", width: 150, filter: 'set'},
 	                      {headerName: "Location", field: "location", width: 150, filter: 'set'},
 	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set'},
@@ -69,19 +68,31 @@
 	    
 	    $scope.externalFilterChanged = function () {
 	        // inform the grid that it needs to filter the data
+	    	console.log('calling api')
 	        $scope.gridOptions.api.onFilterChanged();
 	    };
 	    
-	    $scope.ready = function() {
-	    	$scope.gridOptions.api.sizeColumnsToFit();
-	    };
+	    getBillsList();
+	    
+
+
+	    angular.element(document).ready(function () {
+	    	console.log("test");
+	    	$('.selectpicker').selectpicker("refresh");	    	
+	    });
+
+
 	    
         return serv;
         
         function showAddBillDialog() {
         	ngDialog.open({
         	    template: 'pages/addBill.html',
-        	    controller: 'BillsController'
+        	    controller: 'AddBillController',
+        	    controllerAs: 'abcm',
+        	    closeByEscape:true,
+        	    className: 'ngdialog-theme-default dialogwidth800',
+        	    cache:false
         	});
         }
         

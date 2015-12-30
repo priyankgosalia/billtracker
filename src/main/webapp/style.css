@@ -3,3 +3,7 @@
 	height: 40%;
 	margin: 0 auto;
 }
+
+.ngdialog.dialogwidth800 .ngdialog-content {
+	width: 800px;
+}

@@ -1,41 +1,60 @@
-<script>
-	$(document).ready(function() { $('.selectpicker').selectpicker({
-          style: 'btn-info',
-          size: 4 
-         });
-     });
-</script>
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<h3 class="panel-title">
 			<i class="fa fa-list-alt"></i> &nbsp;&nbsp;Add new Bill
 		</h3>
 	</div>
-	<div class="panel-body">
-		<form name="form" role="form">
-			<div class="form-group">
-				Company: <select class="selectpicker" name="company">
-					<option ng-repeat="company in companyList" value="{{ company.id }}"> {{ company.name }} </option>
-				</select>
+	<div class="panel-body" ng-controller="AddBillController as abcm">
+		<nav class="navbar navbar-default">
+			<form class="navbar-form navbar-left" name="addform" role="form" ng-submit="abcm.addCompany()">
+				<div class="form-group">
+				<div class="input-group">
+					<label for="company">Company&nbsp;&nbsp;</label><br/>
+					<select class="selectpicker" name="companylist" data-width="auto">
+						<option ng-repeat="company in companyList" value="{{ company.id }}"> {{ company.name }} </option>
+					</select> </div> &nbsp;&nbsp;&nbsp;<div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
+						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="abcm.company" required />
+					</div>
+					<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
+					<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>
+				
+				</div>
+			</form>
+		
+			<div ng-if="addCompanyStatus == 'OK'">
+				<div class="alert alert-success " role="alert"><i class="fa fa-check-square"></i>&nbsp;
+				<button type="button" class="close" ></button>
+					{{addCompanyResult}}
+				</div>
 			</div>
-			<label for="location">Location</label>
-			<div class="input-group">
-			  <input type="text" class="form-control" id="location" aria-describedby="basic-addon3">
+			<div ng-if="addCompanyStatus == 'ERROR'">
+				<div class="alert alert-danger " role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
+					<button type="button" class="close" ></button>
+					{{addCompanyResult}}
+				</div>
 			</div>
-			<label for="desc">Description</label>
-			<div class="input-group">
-			  <input type="text" class="form-control" id="desc" aria-describedby="basic-addon3">
-			</div>
-			<label for="desc">Bill Amount</label>
-			<div class="input-group">
-			  <input type="text" class="form-control" id="billamount" aria-describedby="basic-addon3">
-			</div>
-			<div class="input-group">
-			  <span class="input-group-addon" id="basic-addon3">Payment Mode</span>
-			  <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-			</div>
+		</nav>
+		<form name="billform" role="form" ng-submit="abcm.addBill(companylist)">
+				<label for="location">Location</label>
+				<div class="input-group">
+				  <input type="text" class="form-control" id="location" aria-describedby="basic-addon3" ng-model="abcm.location" size="100%" required>
+				</div>
+				<label for="desc">Description</label>
+				<div class="input-group">
+				  <input type="text" class="form-control" id="desc" aria-describedby="basic-addon3" size="100%" ng-model="abcm.description" required>
+				</div>
+				<label for="billamount">Bill Amount</label>
+				<div class="input-group">
+				  <input type="text" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="abcm.amount" required>
+				</div>
+				<label for="paymentmode">Payment Mode</label>
+				<div class="input-group">
+				  <input type="text" class="form-control" id="paymentmode" aria-describedby="basic-addon3" size="100%" ng-model="abcm.paymentmode" required>
+				</div>
+				<br/>
+				<button type="submit" ng-disabled="billform.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
+			
 		</form>
 	</div>
 </div>
-
-

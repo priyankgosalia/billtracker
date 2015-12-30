@@ -98,3 +98,7 @@
 body.ngdialog-open {
   overflow: hidden;
 }
+
+.ngdialog.dialogwidth800 .ngdialog-content {
+	width: 500px;
+}
