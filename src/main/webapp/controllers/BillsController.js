@@ -64,7 +64,6 @@
 	            default: return true;
 	        }
 	    }
-	    $scope.billStatus = "Unpaid";
 	    
 	    $scope.externalFilterChanged = function () {
 	        // inform the grid that it needs to filter the data
@@ -74,15 +73,12 @@
 	    
 	    getBillsList();
 	    
-
-
 	    angular.element(document).ready(function () {
-	    	console.log("test");
-	    	$('.selectpicker').selectpicker("refresh");	    	
+	    	$scope.gridOptions.api.sizeColumnsToFit();
+	    	$scope.billStatus = "Unpaid";
+	    	$scope.gridOptions.api.onFilterChanged();
 	    });
 
-
-	    
         return serv;
         
         function showAddBillDialog() {

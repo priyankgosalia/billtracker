@@ -7,6 +7,18 @@
 	<div class="panel-body" ng-controller="AddBillController as abcm">
 		<nav class="navbar navbar-default">
 			<form class="navbar-form navbar-left" name="addform" role="form" ng-submit="abcm.addCompany()">
+				<div ng-if="addCompanyStatus == 'OK'">
+					<div class="alert alert-success " role="alert"><i class="fa fa-check-square"></i>&nbsp;
+					<button type="button" class="close" ></button>
+						{{addCompanyResult}}
+					</div>
+				</div>
+				<div ng-if="addCompanyStatus == 'ERROR'">
+					<div class="alert alert-danger " role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
+						<button type="button" class="close" ></button>
+						{{addCompanyResult}}
+					</div>
+				</div>
 				<div class="form-group">
 				<div class="input-group">
 					<label for="company">Company&nbsp;&nbsp;</label><br/>
@@ -18,22 +30,10 @@
 					</div>
 					<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
 					<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>
-				
 				</div>
 			</form>
-		
-			<div ng-if="addCompanyStatus == 'OK'">
-				<div class="alert alert-success " role="alert"><i class="fa fa-check-square"></i>&nbsp;
-				<button type="button" class="close" ></button>
-					{{addCompanyResult}}
-				</div>
-			</div>
-			<div ng-if="addCompanyStatus == 'ERROR'">
-				<div class="alert alert-danger " role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
-					<button type="button" class="close" ></button>
-					{{addCompanyResult}}
-				</div>
-			</div>
+			<br/>
+			
 		</nav>
 		<form name="billform" role="form" ng-submit="abcm.addBill(companylist)">
 				<label for="location">Location</label>
