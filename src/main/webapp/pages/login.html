@@ -3,6 +3,9 @@
 	<form name="form" class="form-signin" role="form" ng-submit="vm.login()">
 		<h2 class="form-signin-heading">Please Login</h2>
 		<br />
+		<div ng-if="vm.dataLoading">
+			<i class="fa fa-spinner fa-pulse"></i> <h4>Please wait...</h4>
+		</div>
 		<div ng-if="vm.loginFailure">
 			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{vm.failureMessage}}</div>
 		</div>

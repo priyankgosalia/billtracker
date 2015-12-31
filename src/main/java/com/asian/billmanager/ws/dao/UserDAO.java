@@ -23,7 +23,7 @@ public class UserDAO extends SuperDAO {
 		this.jdbcTemplate = template;
 	}
 	
-	public UserBO getUserInfo(String username) {
+	public UserBO getUserInfo(String username) throws Exception {
 		Map<String, Object> paramMap = new HashMap<String,Object>();
 		paramMap.put("username",username);
 		return jdbcTemplate.query(USER_BY_USERNAME_QUERY, paramMap, new UserExtractor());

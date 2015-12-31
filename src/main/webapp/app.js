@@ -14,30 +14,35 @@
     function config($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
+            	title: 'Home',
                 controller: 'HomeController',
                 templateUrl: 'pages/home.html',
                 controllerAs: 'hm'
             })
  
             .when('/login', {
+            	title: 'Login',
                 controller: 'LoginController',
                 templateUrl: 'pages/login.html',
                 controllerAs: 'vm'
             })
             
             .when('/companies', {
+            	title: 'Companies',
                 controller: 'CompaniesController',
                 templateUrl: 'pages/companies.html',
                 controllerAs: 'cm'
             })
             
             .when('/bills', {
+            	title: 'Bills',
                 controller: 'BillsController',
                 templateUrl: 'pages/bills.html',
                 controllerAs: 'bm'
             })
             
             .when('/about', {
+            	title: 'About',
             	controller: 'AboutController',
                 templateUrl: 'pages/about.html',
                 controllerAs: 'am'
@@ -48,6 +53,11 @@
  
     run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
     function run($rootScope, $location, $cookieStore, $http) {
+    	// dynamically change page title based on view
+    	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+            $rootScope.title = current.$$route.title;
+        });
+    	
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {

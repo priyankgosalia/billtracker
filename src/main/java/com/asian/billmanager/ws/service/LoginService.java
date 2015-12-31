@@ -32,6 +32,7 @@ public class LoginService extends Service {
 	
 	private static final String MSG_LOGIN_FAILED 				= "Login failed. Invalid username/password.";
 	private static final String MSG_INSUFFICIENT_CREDENTIALS 	= "Insufficient credentials provided.";
+	private static final String MSG_DATABASE_ISSUE 				= "Login failed. Unable to connect to the Database.";
 
 	private UserDAO userDAO;
 	private AuditDAO auditDAO;
@@ -58,29 +59,34 @@ public class LoginService extends Service {
 		
 		if (username!=null && password!=null) {
 			logger.info("User = '"+username+"', Password = '"+password+"'");
-			final UserBO u = userDAO.getUserInfo(username);
-			if (u!=null) {
-				final String usermd5 = DigestUtils.md5Hex(password);
-				if (usermd5!=null && u.getPassword()!=null) {
-					if (u.getPassword().equals(usermd5)) {
-						logger.info("Login successful for user '"+username+"'.");
-						response = LoginResponse.getSuccessResponseWithMessage("Login successful.");
-						response.setUserFirstName(u.getFirstName());
-						response.setUserId(u.getId());
-						req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID, u.getId());
-						req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_NAME, u.getUsername());
-						auditDAO.addLoginLog(u.getId(), 0);
+			try {
+				final UserBO u = userDAO.getUserInfo(username);
+				if (u!=null) {
+					final String usermd5 = DigestUtils.md5Hex(password);
+					if (usermd5!=null && u.getPassword()!=null) {
+						if (u.getPassword().equals(usermd5)) {
+							logger.info("Login successful for user '"+username+"'.");
+							response = LoginResponse.getSuccessResponseWithMessage("Login successful.");
+							response.setUserFirstName(u.getFirstName());
+							response.setUserId(u.getId());
+							req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID, u.getId());
+							req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_NAME, u.getUsername());
+							auditDAO.addLoginLog(u.getId(), 0);
+						} else {
+							logger.error("Login failed for user '"+username+"' due to invalid password.");
+							response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
+							auditDAO.addLoginLog(u.getId(), -1);
+						}
 					} else {
-						logger.error("Login failed for user '"+username+"' due to invalid password.");
 						response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
-						auditDAO.addLoginLog(u.getId(), -1);
 					}
 				} else {
+					logger.error("Login failed for user '"+username+"' as user doesn't exist in the database.");
 					response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
 				}
-			} else {
-				logger.error("Login failed for user '"+username+"' as user doesn't exist in the database.");
-				response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
+			} catch (Exception ex) {
+				logger.error("Failed to query the database. "+ex.getMessage());
+				response = LoginResponse.getFailureResponseWithMessage(MSG_DATABASE_ISSUE);
 			}
 		} else {
 			response = LoginResponse.getFailureResponseWithMessage(MSG_INSUFFICIENT_CREDENTIALS);

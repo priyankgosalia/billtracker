@@ -21,6 +21,7 @@
  
         function login() {
             vm.dataLoading = true;
+            vm.loginFailure = false;
             AuthenticationService.Login(vm.username, vm.password, function (response) {
                 if (response.result) {
                     AuthenticationService.SetCredentials(vm.username, vm.password);

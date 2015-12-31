@@ -27,7 +27,7 @@
 					</select> </div> &nbsp;&nbsp;&nbsp;<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
 						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="abcm.company" required />
-					</div>
+					</div>&nbsp;&nbsp;
 					<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
 					<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>
 				</div>
@@ -46,7 +46,7 @@
 				</div>
 				<label for="billamount">Bill Amount</label>
 				<div class="input-group">
-				  <input type="text" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="abcm.amount" required>
+				  <input type="text" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="abcm.amount" required valid-number/>
 				</div>
 				<label for="paymentmode">Payment Mode</label>
 				<div class="input-group">
