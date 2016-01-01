@@ -53,9 +53,9 @@
           };
         });
     
-    AddBillController.$inject = ['$location', '$scope', 'BillService', 'AuthenticationService', 'CompanyService', '$window', '$timeout'];
+    AddBillController.$inject = ['$location', '$scope', 'BillService', 'AuthenticationService', 'CompanyService', 'MetadataService', '$window', '$timeout'];
 	
-    function AddBillController($location, $scope, BillService, AuthenticationService, CompanyService, $window, $timeout) {
+    function AddBillController($location, $scope, BillService, AuthenticationService, CompanyService, MetadataService, $window, $timeout) {
 	   	var serv = {};
 	   	serv.AuthenticationService = AuthenticationService;
 	   	serv.CompanyService = CompanyService;
@@ -65,19 +65,67 @@
 	   	serv.addBill = addBill;
 	   	
         $scope.companyList = getCompanyList();
+        $scope.billTypeList = getBillFreqList();
 	    
 	    angular.element(document).ready(function () {
+	    	$('#dateRangePicker').datepicker({
+	    	    format: 'dd-mm-yyyy'
+	    	})
 	    	$timeout(function(){
-	    		$('.selectpicker').selectpicker();
-		    	$('.selectpicker').selectpicker("refresh");
-	    	},50);
-	    	
+	    		$('#companypicker').selectpicker();
+		    	$('#companypicker').selectpicker("refresh");
+		    	$('#billtypepicker').selectpicker();
+		    	$('#billtypepicker').selectpicker("refresh");
+	    	},10);
+	    	$(function() {
+	    	    $('#companypicker').change(function() {
+	    	        // if changed to, for example, the last option, then
+	    	        // $(this).find('option:selected').text() == D
+	    	        // $(this).val() == 4
+	    	        // get whatever value you want into a variable
+	    	        var x = $(this).val();
+	    	        // and update the hidden input's value
+	    	        $('#companyId').val(x);
+	    	    });
+	    	});
+	    	$(function() {
+	    	    $('#billtypepicker').change(function() {
+	    	        // if changed to, for example, the last option, then
+	    	        // $(this).find('option:selected').text() == D
+	    	        // $(this).val() == 4
+	    	        // get whatever value you want into a variable
+	    	        var x = $(this).val();
+	    	        // and update the hidden input's value
+	    	        $('#billType').val(x);
+	    	    });
+	    	});
 	    });
 
         return serv;
         
-        function addBill(cl) {
-        	console.log("ADD bill invoked!!"+cl);
+        function addBill() {
+        	console.log("addBill ivoked");
+        	var companyId = $('#companyId').val();
+        	var billType = $('#billType').val();
+        	var dueDate = $('#dueDt').val();
+        	// validations
+        	if (companyId == null || companyId == '') {
+        		alert ("You have not selected a Company.");
+        		return;
+        	}
+        	if (billType == null || billType == '') {
+        		alert ("You have not selected the type of Bill.");
+        		return;
+        	}
+        	if (dueDate == null || dueDate == '') {
+        		alert ("You have not entered a due date for the Bill.");
+        		return;
+        	}
+        	var userId = AuthenticationService.GetUserId()
+        	// time to persist the data
+        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,function(response){
+        		console.log(response);
+        	});
         }
         
         function addCompany() {
@@ -99,9 +147,9 @@
                     	    }
                     	});
                     	console.log("final id = "+finalid);
-        	    		$('.selectpicker').selectpicker();
-        	    		$('.selectpicker').val(finalid);
-        		    	$('.selectpicker').selectpicker("refresh");
+        	    		$('#companypicker').selectpicker();
+        	    		$('#companypicker').val(finalid);
+        		    	$('#companypicker').selectpicker("refresh");
         	    	},100);
                     $scope.addCompanyResult = response.message;
                     $scope.addCompanyStatus = "OK";
@@ -120,6 +168,17 @@
                 	$scope.companyList = null;
                 }
                 return $scope.companyList;
+            });
+        }
+        
+        function getBillFreqList() {
+        	MetadataService.getBillFreqList(function (response) {
+                if (response) {
+                    $scope.billTypeList = response.data;
+                } else {
+                	$scope.billTypeList = null;
+                }
+                return $scope.billTypeList;
             });
         }
         

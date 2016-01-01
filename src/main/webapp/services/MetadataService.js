@@ -9,6 +9,7 @@
     function MetadataService($http) {
         var cmservice = this;
         cmservice.getAppInfo = getAppInfo;
+        cmservice.getBillFreqList = getBillFreqList;
         return cmservice;
  
         function getAppInfo(callback) {
@@ -20,6 +21,18 @@
 		        callback(response);
         	}, function errorCallback(response) {
         		console.log("getAppInfo(Error) = "+response);
+        	});
+        }
+        
+        function getBillFreqList(callback) {
+        	$http({
+        		  method: 'GET',
+        		  url: 'ws/metadata/billType'
+        	}).then(function successCallback(response) {
+				console.log("getBillFreqList(Success) = "+response);
+		        callback(response);
+        	}, function errorCallback(response) {
+        		console.log("getBillFreqList(Error) = "+response);
         	});
         }
     }

@@ -49,6 +49,12 @@
 		</constructor-arg>
 	</bean>
 	
+	<bean id="metadataDao" class="com.asian.billmanager.ws.dao.MetadataDAO">
+		<constructor-arg>
+			<ref bean="jtemplate" />
+		</constructor-arg>
+	</bean>
+	
 	<bean id="loginService" class="com.asian.billmanager.ws.service.LoginService">
 		<constructor-arg>
 			<ref bean="userDao" />
@@ -67,6 +73,12 @@
 	<bean id="billService" class="com.asian.billmanager.ws.service.BillService">
 		<constructor-arg>
 			<ref bean="billDao" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="metadataService" class="com.asian.billmanager.ws.service.MetadataService">
+		<constructor-arg>
+			<ref bean="metadataDao" />
 		</constructor-arg>
 	</bean>
 	

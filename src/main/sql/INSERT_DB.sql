@@ -1,14 +1,16 @@
-insert into btrack.users (id, username,password,firstname,lastname,is_admin) 
-values (0,'system','system','System','User',0);
+insert into btrack.users (id, username,password,firstname,lastname,enabled,is_admin) 
+values (1,'system','system','System','User',0,0);
 
-insert into btrack.users (1, username,password,firstname,lastname,is_admin) 
-values (1,'nikita','b00a50c448238a71ed479f81fa4d9066','Nikita','Nagarkar',1);
+insert into btrack.users (id, username,password,firstname,lastname,enabled,is_admin) 
+values (2,'nikita','b00a50c448238a71ed479f81fa4d9066','Nikita','Nagarkar',1,1);
 
-insert into btrack.users (2, username,password,firstname,lastname,is_admin) 
-values (2,'priyank','fd6c09734988030634a769b0c9b712ee','Priyank','Gosalia',0);
+insert into btrack.users (id, username,password,firstname,lastname,enabled,is_admin) 
+values (3,'priyank','fd6c09734988030634a769b0c9b712ee','Priyank','Gosalia',1,0);
 
 insert into btrack.bill_freq (code,description) values ('O','One Time');
 insert into btrack.bill_freq (code,description) values ('M','Monthly');
+insert into btrack.bill_freq (code,description) values ('Q','Quarterly');
+insert into btrack.bill_freq (code,description) values ('H','Half Yearly');
 insert into btrack.bill_freq (code,description) values ('Y','Yearly');
 
 commit;

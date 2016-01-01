@@ -5,56 +5,54 @@
 		</h3>
 	</div>
 	<div class="panel-body" ng-controller="AddBillController as abcm">
+		<div class="input-group">
+			<select class="selectpicker" id="billtypepicker" name="billfreq" data-width="auto" title="Select Bill Type">
+				<option ng-repeat="bt in billTypeList" value="{{ bt.billType }}"> {{ bt.billTypeDesc }} </option>
+			</select>
+		</div><br/>
 		<nav class="navbar navbar-default">
 			<form class="navbar-form navbar-left" name="addform" role="form" ng-submit="abcm.addCompany()">
 				<div ng-if="addCompanyStatus == 'OK'">
-					<div class="alert alert-success " role="alert"><i class="fa fa-check-square"></i>&nbsp;
-					<button type="button" class="close" ></button>
+					<div class="alert alert-success alert-dismissible" role="alert"><i class="fa fa-check-square"></i>&nbsp;
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						{{addCompanyResult}}
 					</div>
 				</div>
 				<div ng-if="addCompanyStatus == 'ERROR'">
-					<div class="alert alert-danger " role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
-						<button type="button" class="close" ></button>
+					<div class="alert alert-danger alert-dismissible" role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						{{addCompanyResult}}
 					</div>
 				</div>
-				<div class="form-group">
+				
 				<div class="input-group">
-					<label for="company">Company&nbsp;&nbsp;</label><br/>
-					<select class="selectpicker" name="companylist" data-width="auto">
+					<select class="selectpicker" id="companypicker" title="Select Company" name="companylist" data-width="auto">
 						<option ng-repeat="company in companyList" value="{{ company.id }}"> {{ company.name }} </option>
-					</select> </div> &nbsp;&nbsp;&nbsp;<div class="input-group">
+					</select>
+				</div> &nbsp;&nbsp;&nbsp;
+				<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
 						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="abcm.company" required />
-					</div>&nbsp;&nbsp;
-					<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
-					<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>
-				</div>
+				</div>&nbsp;&nbsp;
+				<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
+				<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>
 			</form>
 			<br/>
-			
 		</nav>
-		<form name="billform" role="form" ng-submit="abcm.addBill(companylist)">
-				<label for="location">Location</label>
-				<div class="input-group">
-				  <input type="text" class="form-control" id="location" aria-describedby="basic-addon3" ng-model="abcm.location" size="100%" required>
-				</div>
-				<label for="desc">Description</label>
-				<div class="input-group">
-				  <input type="text" class="form-control" id="desc" aria-describedby="basic-addon3" size="100%" ng-model="abcm.description" required>
-				</div>
-				<label for="billamount">Bill Amount</label>
-				<div class="input-group">
-				  <input type="text" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="abcm.amount" required valid-number/>
-				</div>
-				<label for="paymentmode">Payment Mode</label>
-				<div class="input-group">
-				  <input type="text" class="form-control" id="paymentmode" aria-describedby="basic-addon3" size="100%" ng-model="abcm.paymentmode" required>
-				</div>
-				<br/>
-				<button type="submit" ng-disabled="billform.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
+		<form name="billform" role="form" ng-submit="abcm.addBill()">
+			<input type="hidden" name="compname" id="companyId" ng-model="abcm.company"/>
+			<input type="hidden" name="billtyp" id="billType" ng-model="abcm.billType"/>
 			
+			<div class="input-group input-append date" id="dateRangePicker">
+                <input placeholder="Due Date" type="text" class="form-control" id="dueDt" name="date" />
+                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+			<input type="text" placeholder="Location" class="form-control" id="location" aria-describedby="basic-addon3" ng-model="abcm.location" size="100%" required>
+			<input type="text" placeholder="Bill Amount (in numbers only)" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="abcm.amount" required valid-number/>
+				<input type="text" placeholder="Bill Description" class="form-control" id="desc" aria-describedby="basic-addon3" size="100%" ng-model="abcm.description" required>
+				<input type="text" placeholder="Mode of Payment" class="form-control" id="paymentmode" aria-describedby="basic-addon3" size="100%" ng-model="abcm.paymentMode" required>
+			<br/>
+			<button type="submit" ng-disabled="billform.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
 		</form>
 	</div>
 </div>

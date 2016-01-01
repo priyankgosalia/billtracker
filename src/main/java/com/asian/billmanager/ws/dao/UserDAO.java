@@ -15,7 +15,7 @@ import com.asian.billmanager.ws.bo.UserBO;
  * Author:  Priyank Gosalia <priyankmg@gmail.com>
  */
 public class UserDAO extends SuperDAO {
-	private static final String USER_BY_USERNAME_QUERY = "SELECT id,username,password,firstname,lastname from btrack.users where username=:username";
+	private static final String USER_BY_USERNAME_QUERY = "SELECT id,username,password,firstname,lastname,enabled from btrack.users where username=:username";
 	
 	private NamedParameterJdbcTemplate jdbcTemplate = null;
 	
@@ -39,6 +39,7 @@ public class UserDAO extends SuperDAO {
 					u.setPassword(getString(rs,"password"));
 					u.setFirstName(getString(rs,"firstname"));
 					u.setLastName(getString(rs,"lastname"));
+					u.setEnabled(getInteger(rs,"enabled")==1?true:false);
 					return u;
 				}
 			}

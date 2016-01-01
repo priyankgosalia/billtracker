@@ -67,7 +67,6 @@
 	    
 	    $scope.externalFilterChanged = function () {
 	        // inform the grid that it needs to filter the data
-	    	console.log('calling api')
 	        $scope.gridOptions.api.onFilterChanged();
 	    };
 	    

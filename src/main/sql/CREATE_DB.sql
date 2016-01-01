@@ -5,6 +5,7 @@ CREATE TABLE `btrack`.`users` (
     `firstname` CHAR(128) NOT NULL,
     `lastname` CHAR(128) NOT NULL,
     `is_admin` TINYINT NOT NULL,
+    `enabled` TINYINT(1) NOT NULL,
     `creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id,username)
 ) ENGINE = InnoDB;
@@ -17,7 +18,7 @@ CREATE TABLE `btrack`.`company` (
 ) ENGINE = InnoDB;
 
 CREATE TABLE `btrack`.`bill_freq` (
-	`id` TINYINT NOT NULL AUTO_INCREMENT,
+	`id` TINYINT(1) NOT NULL AUTO_INCREMENT,
 	`code` CHAR(1) NOT NULL,
 	`description` CHAR(30) NOT NULL,
 	`creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -28,7 +29,7 @@ CREATE TABLE `btrack`.`bill_freq` (
 CREATE TABLE `btrack`.`bill_master` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`company_id` SMALLINT NOT NULL,
-	`freq_id` TINYINT NOT NULL,
+	`freq_id` TINYINT(1) NOT NULL,
 	`amount` FLOAT NOT NULL,
 	`user_id` SMALLINT NOT NULL,
 	`description` VARCHAR(2048),
@@ -36,6 +37,7 @@ CREATE TABLE `btrack`.`bill_master` (
 	`payment_mode` VARCHAR(512),
 	`due_day` INT,
 	`due_date` DATE,
+	`auto_recur` TINYINT(1) NOT NULL,
 	`creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (id),
 	FOREIGN KEY (company_id)
@@ -54,6 +56,7 @@ CREATE TABLE `btrack`.`bill` (
 	`master_id` INT NOT NULL,
 	`amount` FLOAT NOT NULL,
 	`status` CHAR(2) NOT NULL,
+	`deleted` TINYINT(1) NOT NULL,
 	`creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (id),
 	FOREIGN KEY (master_id)

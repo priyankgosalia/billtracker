@@ -14,6 +14,7 @@ public class UserBO {
 	private String firstName;
 	private String lastName;
 	private boolean admin;
+	private boolean enabled;
 	
 	public int getId() {
 		return id;
@@ -50,6 +51,12 @@ public class UserBO {
 	}
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
 	@Override
