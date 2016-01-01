@@ -63,6 +63,7 @@
 	   	serv.currentUserFirstName = AuthenticationService.GetUserFirstName();
 	   	serv.addCompany = addCompany;
 	   	serv.addBill = addBill;
+	   	serv.dataLoading = false;
 	   	
         $scope.companyList = getCompanyList();
         $scope.billTypeList = getBillFreqList();
@@ -123,8 +124,19 @@
         	}
         	var userId = AuthenticationService.GetUserId()
         	// time to persist the data
-        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,function(response){
+        	serv.dataLoading = true;
+        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,0,function(response){
         		console.log(response);
+        		var result = response.result;
+        		if (response.result == false) {
+        			serv.addBillFailure = true;
+        			serv.addBillFailureMessage = response.message;
+        		} else {
+        			serv.addBillSuccess = true;
+        			serv.addBillSuccessMessage = response.message;
+        			serv.addBillId = response.billId;
+        			alert("Bill added successfully. Bill ID is "+serv.addBillId);
+        		}
         	});
         }
         

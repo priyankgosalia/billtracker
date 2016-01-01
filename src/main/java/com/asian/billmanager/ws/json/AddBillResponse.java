@@ -9,6 +9,14 @@ package com.asian.billmanager.ws.json;
 public class AddBillResponse {
 	boolean result;
 	String message;
+	int billId;
+	
+	public int getBillId() {
+		return billId;
+	}
+	public void setBillId(int billId) {
+		this.billId = billId;
+	}
 	
 	public boolean isResult() {
 		return result;
@@ -32,12 +40,21 @@ public class AddBillResponse {
 		this.message = msg;
 	}
 	
+	public AddBillResponse(boolean result, String msg, int billId) {
+		this(result,msg);
+		this.billId = billId;
+	}
+	
 	public static AddBillResponse getSuccessResponse() {
 		return new AddBillResponse(true);
 	}
 	
 	public static AddBillResponse getSuccessResponseWithMessage(String msg) {
 		return new AddBillResponse(true,msg);
+	}
+	
+	public static AddBillResponse getSuccessResponseWithMessageAndBillId(String msg, int billId) {
+		return new AddBillResponse(true,msg,billId);
 	}
 	
 	public static AddBillResponse getFailureResponse() {

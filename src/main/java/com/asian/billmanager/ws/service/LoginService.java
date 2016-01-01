@@ -32,7 +32,7 @@ public class LoginService extends Service {
 	
 	private static final String MSG_LOGIN_FAILED 				= "Login failed. Invalid username/password.";
 	private static final String MSG_INSUFFICIENT_CREDENTIALS 	= "Insufficient credentials provided.";
-	private static final String MSG_ACCOUNT_DISABLED		 	= "Your account has been disabled by the Administrator.";
+	private static final String MSG_ACCOUNT_DISABLED		 	= "Sorry! Your account has been disabled by the administrator.";
 	private static final String MSG_DATABASE_ISSUE 				= "Login failed. Unable to connect to the Database.";
 
 	private UserDAO userDAO;
@@ -57,19 +57,18 @@ public class LoginService extends Service {
 		final String username = request.getUsername();
 		final String password = request.getPassword();
 		LoginResponse response = null;
-		
 		if (username!=null && password!=null) {
-			logger.info("User = '"+username+"', Password = '"+password+"'");
+			final String passwordHash = DigestUtils.md5Hex(password);
+			logger.info("Logging in User = '"+username+"' with Password(hashed) = '"+passwordHash+"'");
 			try {
 				final UserBO u = userDAO.getUserInfo(username);
 				if (u!=null) {
 					// Check if user is allowed to Login
 					if (u.isEnabled()) {
-						final String usermd5 = DigestUtils.md5Hex(password);
-						if (usermd5!=null && u.getPassword()!=null) {
-							if (u.getPassword().equals(usermd5)) {
+						if (passwordHash!=null && u.getPassword()!=null) {
+							if (u.getPassword().equals(passwordHash)) {
 								logger.info("Login successful for user '"+username+"'.");
-								response = LoginResponse.getSuccessResponseWithMessage("Login successful.");
+								response = LoginResponse.getSuccessResponseWithMessage("Login successful for user '"+u.getUsername()+"'.");
 								response.setUserFirstName(u.getFirstName());
 								response.setUserId(u.getId());
 								req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID, u.getId());
@@ -77,13 +76,15 @@ public class LoginService extends Service {
 								auditDAO.addLoginLog(u.getId(), 0);
 							} else {
 								logger.error("Login failed for user '"+username+"' due to invalid password.");
-								response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
 								auditDAO.addLoginLog(u.getId(), -1);
+								response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
 							}
 						} else {
+							logger.error("Either username or password is not correctly set in the database for user '"+username+"'.");
 							response = LoginResponse.getFailureResponseWithMessage(MSG_LOGIN_FAILED);
 						}
 					} else {
+						logger.warn("The account '"+u.getUsername()+"' has been disabled.");
 						response = LoginResponse.getFailureResponseWithMessage(MSG_ACCOUNT_DISABLED);
 					}
 				} else {
@@ -95,6 +96,7 @@ public class LoginService extends Service {
 				response = LoginResponse.getFailureResponseWithMessage(MSG_DATABASE_ISSUE);
 			}
 		} else {
+			logger.error("Username/Password is null in JSON Request");
 			response = LoginResponse.getFailureResponseWithMessage(MSG_INSUFFICIENT_CREDENTIALS);
 		}
 		return response;

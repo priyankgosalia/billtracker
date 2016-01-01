@@ -85,7 +85,7 @@ public class BillService extends Service {
 		try {
 			Date dueDate = df.parse(request.getDueDate());
 			int userId = Integer.parseInt(request.getUserId());
-			billDAO.addBill(request.getCompanyId(),
+			final int billId = billDAO.addBill(request.getCompanyId(),
 							request.getLocation(),
 							request.getBillType(),
 							request.getAmount(),
@@ -94,12 +94,13 @@ public class BillService extends Service {
 							request.getDescription(),
 							dueDate.getDate(),
 							new java.sql.Date(dueDate.getTime()),
-							0);
+							0,
+							request.getPaid());
+			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill added successfully.",billId);
 		} catch(ParseException ex) {
 			return AddBillResponse.getSuccessResponseWithMessage("Failed to add Bill. The format of Due Date is incorrect.");
 		} catch(Exception ex) {
 			return AddBillResponse.getSuccessResponseWithMessage("Failed to add Bill. Exception: "+ex.getMessage());
 		}
-		return AddBillResponse.getSuccessResponseWithMessage("Bill added successfully.");
 	}
 }

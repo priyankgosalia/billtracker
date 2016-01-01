@@ -53,13 +53,14 @@ CREATE TABLE `btrack`.`bill_master` (
 
 CREATE TABLE `btrack`.`bill` (
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`master_id` INT NOT NULL,
+	`master_bill_id` INT NOT NULL,
 	`amount` FLOAT NOT NULL,
-	`status` CHAR(2) NOT NULL,
+	`paid` TINYINT(1) NOT NULL,
 	`deleted` TINYINT(1) NOT NULL,
+	`due_date` DATE NOT NULL,
 	`creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (id),
-	FOREIGN KEY (master_id)
+	FOREIGN KEY (master_bill_id)
       REFERENCES bill_master(id)
       ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB;

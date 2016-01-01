@@ -12,18 +12,40 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.asian.billmanager.ws" />
 	
+	<!-- vanilla spring data source for development -->
 	<bean id="ds"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/btrack?autoReconnect=true&amp;useSSL=false" />
-		<property name="username" value="btrack" />
-		<property name="password" value="btrack" />
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
 	</bean>
+	
+	<!-- use a connection pooled data source for production -->
+	<bean id="cpds" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+	    <property name="driverClass" value="${jdbc.driverClassName}"/>
+	    <property name="jdbcUrl" value="${jdbc.url}"/>
+	    <property name="user" value="${jdbc.username}"/>
+	    <property name="password" value="${jdbc.password}"/>
+	    <property name="acquireIncrement" value="5"/>
+        <property name="idleConnectionTestPeriod" value="60"/>
+        <property name="maxPoolSize" value="100"/>
+        <property name="maxStatements" value="50"/>
+        <property name="minPoolSize" value="10"/>
+	</bean>
+
+	<context:property-placeholder location="/WEB-INF/classes/db.properties"/>
 
 	<bean id="jtemplate"
 		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-		<constructor-arg ref="ds"></constructor-arg>
+		<constructor-arg ref="cpds"></constructor-arg>
 	</bean>
+	
+	<bean id="sjtemplate"
+		class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+		<constructor-arg ref="cpds"></constructor-arg>
+	</bean>
+	
 
 	<bean id="userDao" class="com.asian.billmanager.ws.dao.UserDAO">
 		<constructor-arg>
@@ -40,6 +62,9 @@
 	<bean id="billDao" class="com.asian.billmanager.ws.dao.BillDAO">
 		<constructor-arg>
 			<ref bean="jtemplate" />
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="sjtemplate" />
 		</constructor-arg>
 	</bean>
 	

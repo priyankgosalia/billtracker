@@ -21,11 +21,11 @@
 	    
 	    var columnDefs = [
 	                      {headerName: "Bill #", field: "id", width: 75, filter: 'number', suppressSizeToFit:true},
-	                      {headerName: "Company", field: "company", width: 150, filter: 'set'},
-	                      {headerName: "Location", field: "location", width: 150, filter: 'set'},
+	                      {headerName: "Company", field: "company", width: 170, filter: 'set'},
+	                      {headerName: "Location", field: "location", width: 130, filter: 'set'},
 	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set'},
 	                      {headerName: "Addded by", field: "user", width: 90, filter: 'set'},
-	                      {headerName: "Mode", field: "paymentMode", width: 140, filter: 'set'},
+	                      
 	                      {headerName: "Due Date", field: "dueDate", width: 90, filter: 'set'},
 	                      {headerName: "Status", field: "status", width: 80, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
 	                          if (params.value == "Paid") {

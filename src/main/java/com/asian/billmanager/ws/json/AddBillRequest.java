@@ -15,7 +15,7 @@ public class AddBillRequest {
 	Double amount;
 	String paymentMode;
 	String userId;
-	boolean paid;
+	int paid;
 	
 	@Override
 	public String toString() {
@@ -90,10 +90,10 @@ public class AddBillRequest {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public boolean isPaid() {
+	public int getPaid() {
 		return paid;
 	}
-	public void setPaid(boolean paid) {
+	public void setPaid(int paid) {
 		this.paid = paid;
 	}
 	
