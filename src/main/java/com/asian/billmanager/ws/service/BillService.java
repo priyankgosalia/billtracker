@@ -87,6 +87,27 @@ public class BillService extends Service {
 		return bx;
 	}
 	
+	@GET
+	@Path("billInfoForEdit")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Bill getBillInfoForEdit(@QueryParam("id") int billId,
+			@Context HttpServletRequest request) throws JSONException {
+		logger.info("Retrieving Bill info for Edit Bill # "+billId+" from the database");
+		Bill bx = null;
+		try {
+			BillBO b = billDAO.getBillInfoForEdit(billId);
+			if (b!=null) {
+				bx = populateBillInfoObject(b);
+				logger.info("Retrieved info for Edit Bill # "+billId+" from database.");
+			} else {
+				logger.error("Failed to retrieve info for Edit Bill # "+billId+" from database.");
+			}
+		} catch (Exception ex) {
+			logger.error("Error ocurred while retrieving edit bill info for Bill # "+billId);
+		}
+		return bx;
+	}
+	
 	@POST
 	@Path("addBill")
 	@Consumes(MediaType.APPLICATION_JSON)

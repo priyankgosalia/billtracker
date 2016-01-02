@@ -8,7 +8,7 @@ CREATE TABLE `btrack`.`users` (
     `enabled` TINYINT(1) NOT NULL,
     `creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id,username)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB AUTO_INCREMENT=2;
 
 CREATE TABLE `btrack`.`company` (
     `id` SMALLINT NOT NULL AUTO_INCREMENT,
@@ -55,6 +55,7 @@ CREATE TABLE `btrack`.`bill` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`master_bill_id` INT NOT NULL,
 	`amount` FLOAT NOT NULL,
+	`freq_id` TINYINT(1) NOT NULL,
 	`paid` TINYINT(1) NOT NULL,
 	`deleted` TINYINT(1) NOT NULL,
 	`due_date` DATE NOT NULL,
@@ -62,7 +63,10 @@ CREATE TABLE `btrack`.`bill` (
 	PRIMARY KEY (id),
 	FOREIGN KEY (master_bill_id)
       REFERENCES bill_master(id)
-      ON UPDATE CASCADE ON DELETE CASCADE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (freq_id)
+      REFERENCES btrack.bill_freq(id)
+      ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
 -- Audit Tables

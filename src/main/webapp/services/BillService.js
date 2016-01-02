@@ -11,6 +11,7 @@
         cmservice.getAllBills = getAllBills;
         cmservice.addBill = addBill;
         cmservice.getBillInfo = getBillInfo;
+        cmservice.getBillInfoForEdit = getBillInfoForEdit;
         return cmservice;
  
         function getAllBills(callback) {
@@ -29,6 +30,18 @@
         	$http({
         		  method: 'GET',
         		  url: 'ws/bill/billInfo'+'?id='+billId
+        	}).then(function successCallback(response) {
+				console.log("getBillInfo(Success) = "+response);
+		        callback(response);
+        	}, function errorCallback(response) {
+        		console.log("getBillInfo(Error) = "+response);
+        	});
+        }
+        
+        function getBillInfoForEdit(billId,callback) {
+        	$http({
+        		  method: 'GET',
+        		  url: 'ws/bill/billInfoForEdit'+'?id='+billId
         	}).then(function successCallback(response) {
 				console.log("getBillInfo(Success) = "+response);
 		        callback(response);

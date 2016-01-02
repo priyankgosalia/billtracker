@@ -1,0 +1,70 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			<i class="fa fa-list-alt"></i> &nbsp;&nbsp;Edit Bill # {{billInfo.id}}
+		</h3>
+	</div>
+	<div class="panel-body" ng-controller="EditBillController as ebcm">
+		<div ng-if="ebcm.dataLoading">
+			<i class="fa fa-spinner fa-pulse"></i> <h4>Please wait...</h4>
+		</div>
+		<div ng-if="ebcm.addBillFailure">
+			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{ebcm.addBillFailureMessage}}</div>
+		</div>
+		<div class="input-group">
+			<select class="selectpicker" id="billtypepicker" name="billfreq" width="fit" title="Select Bill Type">
+				<option ng-repeat="bt in billTypeList" value="{{ bt.billType }}"> {{ bt.billTypeDesc }} </option>
+			</select>
+			<div class="input-group-addon">
+		        <input type="checkbox" id="recurcheckbox" aria-label="..."> Recurring Bill (Auto-generate after Due Date)
+		    </div>
+		</div>
+		<br/>
+		<nav class="navbar navbar-default">
+			<form class="navbar-form navbar-left" name="addform" role="form" ng-submit="ebcm.addCompany()">
+				<div ng-if="addCompanyStatus == 'OK'">
+					<div class="alert alert-success alert-dismissible" role="alert"><i class="fa fa-check-square"></i>&nbsp;
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						{{addCompanyResult}}
+					</div>
+				</div>
+				<div ng-if="addCompanyStatus == 'ERROR'">
+					<div class="alert alert-danger alert-dismissible" role="alert"><i class="fa fa-exclamation-triangle"></i>&nbsp;
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						{{addCompanyResult}}
+					</div>
+				</div>
+				<div class="input-group">
+					<select class="selectpicker" id="companypicker" title="Select Company" name="companylist" data-width="auto">
+						<option ng-repeat="company in companyList" value="{{ company.id }}"> {{ company.name }} </option>
+					</select>
+				</div> &nbsp;&nbsp;&nbsp;
+				<div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
+						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="abcm.company" required />
+				</div>&nbsp;&nbsp;
+				<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
+				<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>
+			</form>
+			<br/>
+		</nav>
+		<form name="billform" role="form" ng-submit="ebcm.editBill()">
+			<input type="hidden" name="compname" id="companyId" ng-model="abcm.company"/>
+			<input type="hidden" name="billtyp" id="billType" ng-model="abcm.billType"/>
+			<input type="hidden" name="rec" id="recurrence" ng-model="abcm.recurrence"/>
+			<div class="input-group input-append date" id="dateRangePicker">
+                <input placeholder="Due Date" type="text" class="form-control" id="dueDt" name="date" />
+                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+			<input type="text" placeholder="Location" class="form-control" id="location" aria-describedby="basic-addon3" ng-model="ebcm.location" size="100%" required>
+			<input type="text" placeholder="Bill Amount (in numbers only)" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.amount" required valid-number/>
+				<input type="text" placeholder="Bill Description" class="form-control" id="desc" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.description" required>
+				<input type="text" placeholder="Mode of Payment" class="form-control" id="paymentmode" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.paymentMode" required>
+			<br/>
+			<div class="ngdialog-buttons">
+				<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog('Cancel')"> <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Cancel</button>
+				<button type="submit" ng-disabled="billform.$invalid" class="ngdialog-button ngdialog-button-primary"><i class="fa fa-plus-square"></i> &nbsp;Save&nbsp;</button>
+			</div>		
+		</form>
+	</div>
+</div>

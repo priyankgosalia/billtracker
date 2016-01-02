@@ -71,7 +71,7 @@
 	    angular.element(document).ready(function () {
 	    	$('#dateRangePicker').datepicker({
 	    	    format: 'dd-mm-yyyy'
-	    	})
+	    	});
 	    	$timeout(function(){
 	    		$('#companypicker').selectpicker();
 		    	$('#companypicker').selectpicker("refresh");
@@ -123,14 +123,13 @@
         return serv;
         
         function addBill() {
-        	console.log("addBill ivoked");
         	var companyId = $('#companyId').val();
         	var billType = $('#billType').val();
         	var dueDate = $('#dueDt').val();
         	var recurrence = $('#recurrence').val();
         	// validations
         	if (companyId == null || companyId == '') {
-        		alert ("You have not selected a Company.");
+        		alert ("You have not selected any Company.");
         		return;
         	}
         	if (billType == null || billType == '') {

@@ -13,6 +13,7 @@
 	   	serv.getBillsList = getBillsList;
 	   	serv.showAddBillDialog = showAddBillDialog;
 	   	serv.showViewBillDialog = showViewBillDialog;
+	   	serv.showEditBillDialog = showEditBillDialog;
 	   	serv.logout = logout;
 	   	serv.AuthenticationService = AuthenticationService;
 	   	serv.CompanyService = CompanyService;
@@ -114,6 +115,19 @@
         	    template: 'pages/viewBill.html',
         	    controller: 'ViewBillController',
         	    controllerAs: 'vbcm',
+        	    closeByEscape:true,
+        	    className: 'ngdialog-theme-default dialogwidth800',
+        	    cache:false,
+        	    scope:$scope
+        	});
+        }
+        
+        function showEditBillDialog(billId) {
+        	$scope.billId = billId;
+        	ngDialog.open({
+        	    template: 'pages/editBill.html',
+        	    controller: 'EditBillController',
+        	    controllerAs: 'ebcm',
         	    closeByEscape:true,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,

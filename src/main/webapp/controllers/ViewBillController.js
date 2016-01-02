@@ -1,6 +1,6 @@
 // File: ViewBillController.js
 // Author: Priyank Gosalia <priyank.gosalia@gmail.com>
-// Created on: 2nd January 2015
+// Created on: 2nd January 2016
 
 (function () {
     'use strict';
@@ -35,9 +35,9 @@
 	                    if (day.length < 2) day = '0' + day;
 	                    $scope.billInfo.dueDate=[day, month, year].join('/');
 	                    if ($scope.billInfo.recurring == true) {
-	                    	$scope.recurringText = "(Recurring Bill)";
+	                    	$scope.recurringText = "Recurring Bill";
 	                    } else {
-	                    	$scope.recurringText = "(Non-Recurring Bill)";
+	                    	$scope.recurringText = "Non-Recurring Bill";
 	                    }
 	                    if ($scope.billInfo.status == "Paid") {
 	                    	$scope.paid = true;
