@@ -4,28 +4,24 @@
 
 (function () {
     'use strict';
- 
     angular.module('billApp').controller('ViewBillController', ViewBillController);
-    
     ViewBillController.$inject = ['$location', '$scope', 'BillService', 'AuthenticationService','$window', '$timeout'];
-	
+
     function ViewBillController($location, $scope, BillService, AuthenticationService, $window, $timeout) {
 	   	var cm = {};
 	   	cm.AuthenticationService = AuthenticationService;
 	   	cm.currentUser = AuthenticationService.GetUsername();
 	   	cm.currentUserFirstName = AuthenticationService.GetUserFirstName();
+	   	cm.getBillInfo = getBillInfo;
 	   	cm.dataLoading = false;
 
 	    angular.element(document).ready(function () {
-	    	$timeout(function(){
-	    		getBillInfo($scope.billId);
-	    	},10);
+	    	getBillInfo($scope.billId);
 	    });
 
         return cm;
-        
+
         function getBillInfo(billId) {
-        	
         	cm.dataLoading = true;
         	BillService.getBillInfo(billId,function (response) {
                 if (response) {
@@ -39,7 +35,6 @@
 	                    if (day.length < 2) day = '0' + day;
 	                    $scope.billInfo.dueDate=[day, month, year].join('/');
         	    	},10);
-                    
                 } else {
                 	$scope.billInfo = null;
                 }
@@ -48,5 +43,4 @@
             });
         }
 	}
- 
 })();

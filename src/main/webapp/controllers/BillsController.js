@@ -36,12 +36,10 @@
 	                      }},
 	                      {headerName: "Amount", field: "amount", width: 90, filter: 'number'},
 	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
-//                              var anchorViewLink = document.createElement("a");
-//                              anchorViewLink.appendChild(document.createTextNode('View'));
-//                              anchorViewLink.href="#"+params.data.id;
-//	                          	eturn anchorViewLink;
 	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View</a>';
-	                    	  return a;
+	                    	  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
+	                    	  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
+	                    	  return a+'&nbsp;&nbsp;'+b+'&nbsp;&nbsp;'+c;
 	                      }}
 	                  ];
 	    $scope.gridOptions = {

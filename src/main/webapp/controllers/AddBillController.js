@@ -163,10 +163,10 @@
                     	    	finalid = id;
                     	    }
                     	});
-                    	console.log("final id = "+finalid);
         	    		$('#companypicker').selectpicker();
         	    		$('#companypicker').val(finalid);
         		    	$('#companypicker').selectpicker("refresh");
+        		    	$('#companyId').val(finalid);
         	    	},100);
                     $scope.addCompanyResult = response.message;
                     $scope.addCompanyStatus = "OK";
