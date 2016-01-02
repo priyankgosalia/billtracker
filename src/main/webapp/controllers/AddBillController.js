@@ -98,7 +98,25 @@
 	    	        var x = $(this).val();
 	    	        // and update the hidden input's value
 	    	        $('#billType').val(x);
+	    	        if (x=='O') {
+	    	        	$('#recurcheckbox').prop("checked", false);
+	    	        	$('#recurrence').val(false);
+	    	        } else {
+	    	        	$('#recurcheckbox').prop("checked", true);
+	    	        	$('#recurrence').val(true);
+	    	        }
 	    	    });
+	    	});
+	    	$('#recurcheckbox').on('change', function() {
+	    		var billType = $('#billtypepicker').val();
+	    		if (billType == 'O') {
+	    			if (this.checked) {
+	    				alert("This option is not allowed for 'One Time' Bills.");
+	    				this.checked = false;
+	    				$('#recurrence').val(false);
+	    			}
+	    		}
+	    		$('#recurrence').val(this.checked);
 	    	});
 	    });
 
@@ -109,6 +127,7 @@
         	var companyId = $('#companyId').val();
         	var billType = $('#billType').val();
         	var dueDate = $('#dueDt').val();
+        	var recurrence = $('#recurrence').val();
         	// validations
         	if (companyId == null || companyId == '') {
         		alert ("You have not selected a Company.");
@@ -125,7 +144,8 @@
         	var userId = AuthenticationService.GetUserId()
         	// time to persist the data
         	serv.dataLoading = true;
-        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,0,function(response){
+        	console.log(recurrence);
+        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,recurrence,function(response){
         		console.log(response);
         		var result = response.result;
         		serv.dataLoading = false;
@@ -140,7 +160,6 @@
         			serv.addBillId = response.billId;
         			$scope.closeThisDialog('v');
         			alert("Bill added successfully. Bill ID is "+serv.addBillId);
-        			BillsController.getBillsList();
         		}
         	});
         }

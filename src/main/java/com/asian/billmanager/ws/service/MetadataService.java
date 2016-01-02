@@ -63,4 +63,21 @@ public class MetadataService extends Service {
 		
 		return retList;
 	}
+	
+	@GET
+	@Path("audit/ServiceHits")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<BillTypeResponse> getServiceHits() throws JSONException {
+		List<BillTypeResponse> retList = new LinkedList<BillTypeResponse>();
+		try {
+			List<BillFreqBO> billTypeList = metadataDAO.getBillFreqTypes();
+			for (BillFreqBO bf:billTypeList) {
+				retList.add(new BillTypeResponse(bf.getType(),bf.getDesc()));
+			}
+		} catch (Exception ex) {
+			logger.error("Failed to retrieve bill type information from database. "+ex.getMessage());
+		}
+		
+		return retList;
+	}
 }

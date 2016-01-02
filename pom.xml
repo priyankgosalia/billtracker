@@ -16,8 +16,20 @@
 	<developers>
 		<developer>
 			<id>1</id>
+			<roles>
+				<role>Architect</role>
+				<role>Developer</role>
+			</roles>
 			<name>Priyank Gosalia</name>
 			<email>priyankmg@gmail.com</email>
+		</developer>
+		<developer>
+			<id>2</id>
+			<roles>
+				<role>Concept</role>
+			</roles>
+			<name>Nikita Nagarkar</name>
+			<email>niki2804@gmail.com</email>
 		</developer>
 	</developers>
 	<properties>
@@ -107,6 +119,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>3.2.16.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>3.2.16.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>3.2.16.RELEASE</version>
 		</dependency>
@@ -114,6 +136,11 @@
 			<groupId>c3p0</groupId>
 			<artifactId>c3p0</artifactId>
 			<version>0.9.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.6</version>
 		</dependency>
 		<dependency>
 		    <groupId>mysql</groupId>

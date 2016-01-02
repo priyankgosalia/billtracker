@@ -34,7 +34,16 @@
 	                        	  return {'color': 'darkred'};
 	                          }
 	                      }},
-	                      {headerName: "Amount", field: "amount", width: 90, filter: 'number'},
+	                      {headerName: "Amount", field: "amount", width: 90, filter: 'set', cellRenderer: function(params) {
+	                    	  var text = '&#8377; '+params.data.amount;
+	                    	  return text;
+	                      }, cellStyle: function(params) {
+	                          if (params.value == "Paid") {
+	                              return {'color': 'darkgreen'};
+	                          } else {
+	                        	  return {'color': 'darkred'};
+	                          }
+	                      }},
 	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
 	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View</a>';
 	                    	  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';

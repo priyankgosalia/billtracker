@@ -16,6 +16,7 @@ public class AddBillRequest {
 	String paymentMode;
 	String userId;
 	int paid;
+	boolean recurrence;
 	
 	@Override
 	public String toString() {
@@ -38,6 +39,8 @@ public class AddBillRequest {
 		builder.append(userId);
 		builder.append(", paid=");
 		builder.append(paid);
+		builder.append(", recurrence=");
+		builder.append(recurrence);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -96,5 +99,10 @@ public class AddBillRequest {
 	public void setPaid(int paid) {
 		this.paid = paid;
 	}
-	
+	public boolean isRecurrence() {
+		return recurrence;
+	}
+	public void setRecurrence(boolean recurrence) {
+		this.recurrence = recurrence;
+	}
 }

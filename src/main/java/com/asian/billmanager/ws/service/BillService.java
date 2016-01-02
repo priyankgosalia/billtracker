@@ -106,7 +106,7 @@ public class BillService extends Service {
 							request.getDescription(),
 							dueDate.getDate(),
 							new java.sql.Date(dueDate.getTime()),
-							0,
+							(request.isRecurrence())?1:0,
 							request.getPaid());
 			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill added successfully.",billId);
 		} catch(ParseException ex) {

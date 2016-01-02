@@ -11,8 +11,9 @@
           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	<context:annotation-config />
 	<context:component-scan base-package="com.asian.billmanager.ws" />
+	<context:property-placeholder location="/WEB-INF/classes/app.properties"/>
 	
-	<!-- vanilla spring data source for development -->
+	<!-- use a vanilla Spring data source for development -->
 	<bean id="ds"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />
@@ -21,20 +22,18 @@
 		<property name="password" value="${jdbc.password}" />
 	</bean>
 	
-	<!-- use a connection pooled data source for production -->
+	<!-- use a pooled data source for production -->
 	<bean id="cpds" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 	    <property name="driverClass" value="${jdbc.driverClassName}"/>
 	    <property name="jdbcUrl" value="${jdbc.url}"/>
 	    <property name="user" value="${jdbc.username}"/>
 	    <property name="password" value="${jdbc.password}"/>
-	    <property name="acquireIncrement" value="5"/>
-        <property name="idleConnectionTestPeriod" value="60"/>
-        <property name="maxPoolSize" value="100"/>
-        <property name="maxStatements" value="50"/>
-        <property name="minPoolSize" value="10"/>
+	    <property name="acquireIncrement" value="${pool.c3p0.acquireIncrement}"/>
+        <property name="idleConnectionTestPeriod" value="${pool.c3p0.idleConnectionTestPeriod}"/>
+        <property name="maxPoolSize" value="${pool.c3p0.maxPoolSize}"/>
+        <property name="maxStatements" value="${pool.c3p0.maxStatements}"/>
+        <property name="minPoolSize" value="${pool.c3p0.minPoolSize}"/>
 	</bean>
-
-	<context:property-placeholder location="/WEB-INF/classes/db.properties"/>
 
 	<bean id="jtemplate"
 		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
@@ -46,7 +45,6 @@
 		<constructor-arg ref="cpds"></constructor-arg>
 	</bean>
 	
-
 	<bean id="userDao" class="com.asian.billmanager.ws.dao.UserDAO">
 		<constructor-arg>
 			<ref bean="jtemplate" />
@@ -108,4 +106,32 @@
 	</bean>
 	
 	<bean id="appContext" class="com.asian.billmanager.ws.context.ApplicationContextProvider"></bean>
+	
+	<!-- Start of Auto Bill Generator Job configuration section -->
+	<bean id="autoBillGenTask" class="com.asian.billmanager.tasks.AutoBillGeneratorTask" /> 
+	<bean name="autoBillGenJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.asian.billmanager.tasks.AutoBillGeneratorQuartzJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="autoBillGenTask" value-ref="autoBillGenTask" />
+			</map>
+		</property>
+	</bean>
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="autoBillGenJob" />
+		<property name="cronExpression" value="${auto.bill.gen.job.interval.cron}" />
+	</bean>
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+			<list>
+				<ref bean="autoBillGenJob" />
+			</list>
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+			</list>
+		</property>
+	</bean>
+	<!-- End of Auto Bill Generator Job configuration section -->
 </beans>  
