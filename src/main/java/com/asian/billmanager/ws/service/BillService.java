@@ -133,6 +133,7 @@ public class BillService extends Service {
 		bx.setDueDay(b.getDueDay());
 		bx.setDeleted(b.isDeleted());
 		bx.setCreationDate(tf.format(b.getCreationDate()));
+		bx.setRecurring(b.isRecurring());
 		return bx;
 	}
 }

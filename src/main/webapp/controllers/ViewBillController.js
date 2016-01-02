@@ -34,6 +34,16 @@
 	                    if (month.length < 2) month = '0' + month;
 	                    if (day.length < 2) day = '0' + day;
 	                    $scope.billInfo.dueDate=[day, month, year].join('/');
+	                    if ($scope.billInfo.recurring == true) {
+	                    	$scope.recurringText = "(Recurring Bill)";
+	                    } else {
+	                    	$scope.recurringText = "(Non-Recurring Bill)";
+	                    }
+	                    if ($scope.billInfo.status == "Paid") {
+	                    	$scope.paid = true;
+	                    } else {
+	                    	$scope.paid = false;
+	                    }
         	    	},10);
                 } else {
                 	$scope.billInfo = null;

@@ -25,6 +25,7 @@ public class Bill {
 	int dueDay;
 	Date dueDate;
 	boolean deleted;
+	boolean recurring;
 	String creationDate;
 	
 	@Override
@@ -56,6 +57,8 @@ public class Bill {
 		builder.append(dueDate);
 		builder.append(", deleted=");
 		builder.append(deleted);
+		builder.append(", recurring=");
+		builder.append(recurring);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -174,6 +177,12 @@ public class Bill {
 	}
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	public boolean isRecurring() {
+		return recurring;
+	}
+	public void setRecurring(boolean recurring) {
+		this.recurring = recurring;
 	}
 	public String getCreationDate() {
 		return creationDate;

@@ -29,7 +29,7 @@ public class BillDAO extends SuperDAO {
 	private NamedParameterJdbcTemplate jdbcTemplate = null;
 	private SimpleJdbcTemplate sjdbcTemplate = null;
 	private static final String ALL_BILLS_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby,bf.description frequency, "+
-												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date "+
+												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
 												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c "+
 												"where b.master_bill_id = bm.id and bm.freq_id = bf.id and bm.user_id = u.id "+
 												"and bm.company_id = c.id order by b.id desc";
@@ -41,7 +41,7 @@ public class BillDAO extends SuperDAO {
 															":master_bill_id,:amount,:due_date,:paid,0)";
 	private static final String LAST_ID_QUERY = "select last_insert_id()";
 	private static final String VIEW_BILL_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby, bf.description frequency, "+
-												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date "+
+												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
 												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c where b.master_bill_id = bm.id and "+
 												"bm.freq_id = bf.id and bm.user_id = u.id and bm.company_id = c.id and b.id=:bill_id";
 	
@@ -153,6 +153,12 @@ public class BillDAO extends SuperDAO {
 			b.setDeleted(false);
 		} else {
 			b.setDeleted(true);
+		}
+		final int recurring = getInteger(rs,"auto_recur");
+		if (recurring!=1) {
+			b.setRecurring(false);
+		} else {
+			b.setRecurring(true);
 		}
 		b.setCreationDate(getTimestamp(rs,"creation_date"));
 		return b;

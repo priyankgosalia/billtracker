@@ -18,7 +18,7 @@
 			</tr>
 			<tr>
 				<td><b>Type of Bill</b></td>
-				<td>{{billInfo.frequency}}</td>
+				<td>{{billInfo.frequency}} &nbsp;<span class="label label-warning">{{recurringText}}</span></td>
 			</tr>
 			<tr>
 				<td><b>Company Name</b></td>
@@ -50,11 +50,18 @@
 			</tr>
 			<tr>
 				<td><b>Payment Status</b></td>
-				<td>{{billInfo.status}}</td>
+				<td>
+					<div ng-if="paid==true">
+						<h5><span class="label label-success">Paid</span></h5>
+					</div>
+					<div ng-if="paid==false">
+						<h5><span class="label label-danger">Unpaid</span></h5>
+					</div>
+				</td>
 			</tr>
 		</table>
 		<div class="ngdialog-buttons">
-			<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog('Close')"> <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Close</button>
+			<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog('Close')"> <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Close</button>
 		</div>	
 	</div>
 </div>

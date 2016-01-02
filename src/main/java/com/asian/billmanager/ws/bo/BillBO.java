@@ -26,6 +26,7 @@ public class BillBO {
 	private Date dueDate;
 	private boolean deleted;
 	private Timestamp creationDate;
+	private boolean recurring;
 	
 	@Override
 	public String toString() {
@@ -178,5 +179,11 @@ public class BillBO {
 	}
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
+	}
+	public boolean isRecurring() {
+		return recurring;
+	}
+	public void setRecurring(boolean recurring) {
+		this.recurring = recurring;
 	}
 }
