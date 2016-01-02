@@ -3,6 +3,7 @@ package com.asian.billmanager.ws.dao;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /*
  * SuperDAO - Daddy of all DAOs
@@ -28,6 +29,11 @@ public class SuperDAO {
 	
 	protected static Date getDate(ResultSet rs, String columnName) throws SQLException {
 		Date val = rs.getDate(columnName);
+		return rs.wasNull() ? null : val;
+	}
+	
+	protected static Timestamp getTimestamp(ResultSet rs, String columnName) throws SQLException {
+		Timestamp val = rs.getTimestamp(columnName);
 		return rs.wasNull() ? null : val;
 	}
 	

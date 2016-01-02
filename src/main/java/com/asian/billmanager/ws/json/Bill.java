@@ -1,6 +1,7 @@
 package com.asian.billmanager.ws.json;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /*
  * Bill
@@ -23,6 +24,8 @@ public class Bill {
 	String status;
 	int dueDay;
 	Date dueDate;
+	boolean deleted;
+	String creationDate;
 	
 	@Override
 	public String toString() {
@@ -51,6 +54,8 @@ public class Bill {
 		builder.append(dueDay);
 		builder.append(", dueDate=");
 		builder.append(dueDate);
+		builder.append(", deleted=");
+		builder.append(deleted);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -163,5 +168,17 @@ public class Bill {
 	}
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	public String getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
 	}
 }

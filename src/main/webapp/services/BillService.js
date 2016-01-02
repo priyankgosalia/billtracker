@@ -10,6 +10,7 @@
         var cmservice = this;
         cmservice.getAllBills = getAllBills;
         cmservice.addBill = addBill;
+        cmservice.getBillInfo = getBillInfo;
         return cmservice;
  
         function getAllBills(callback) {
@@ -21,6 +22,18 @@
 		        callback(response);
         	}, function errorCallback(response) {
         		console.log("getAllBills(Error) = "+response);
+        	});
+        }
+        
+        function getBillInfo(billId,callback) {
+        	$http({
+        		  method: 'GET',
+        		  url: 'ws/bill/billInfo'+'?id='+billId
+        	}).then(function successCallback(response) {
+				console.log("getBillInfo(Success) = "+response);
+		        callback(response);
+        	}, function errorCallback(response) {
+        		console.log("getBillInfo(Error) = "+response);
         	});
         }
         

@@ -53,7 +53,7 @@
           };
         });
     
-    AddBillController.$inject = ['$location', '$scope', 'BillService', 'AuthenticationService', 'CompanyService', 'MetadataService', '$window', '$timeout'];
+    AddBillController.$inject = ['$location', '$scope', 'BillService', 'AuthenticationService', 'CompanyService', 'MetadataService','$window', '$timeout'];
 	
     function AddBillController($location, $scope, BillService, AuthenticationService, CompanyService, MetadataService, $window, $timeout) {
 	   	var serv = {};
@@ -140,6 +140,7 @@
         			serv.addBillId = response.billId;
         			$scope.closeThisDialog('v');
         			alert("Bill added successfully. Bill ID is "+serv.addBillId);
+        			BillsController.getBillsList();
         		}
         	});
         }

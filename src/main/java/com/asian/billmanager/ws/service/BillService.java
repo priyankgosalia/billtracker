@@ -12,6 +12,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +35,9 @@ public class BillService extends Service {
 	private static final String SERVICE_NAME = "/bill";
 	private static final Logger logger = LogManager.getLogger(BillService.class.getName());
 	private static final String DATE_FORMAT = "dd-MM-yyyy";
+	private static final String TIMESTAMP_FORMAT = "dd/MMM/yyyy hh:mm a";
 	private static final DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+	private static final DateFormat tf = new SimpleDateFormat(TIMESTAMP_FORMAT);
 	private BillDAO billDAO = null;
 	
 	@Override
@@ -51,28 +54,37 @@ public class BillService extends Service {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Bill> getAllBills(@Context HttpServletRequest request) throws JSONException {
 		logger.info("Retrieving all bills from database");
-		List<Bill> list = new LinkedList<Bill>();
+		final List<Bill> list = new LinkedList<Bill>();
 		List<BillBO> billListFromDB = billDAO.getAllBills();
 		if (billListFromDB!=null && billListFromDB.size()>0) {
 			for (BillBO b:billListFromDB) {
-				Bill bx = new Bill();
-				bx.setId(b.getId());
-				bx.setMasterId(b.getMasterId());
-				bx.setAmount(b.getAmount());
-				bx.setDescription(b.getDescription());
-				bx.setLocation(b.getLocation());
-				bx.setCompany(b.getCompany());
-				bx.setFrequency(b.getFrequency());
-				bx.setPaymentMode(b.getPaymentMode());
-				bx.setStatus(b.getStatus());
-				bx.setUser(b.getUser());
-				bx.setDueDate(b.getDueDate());
-				bx.setDueDay(b.getDueDay());
+				Bill bx = populateBillInfoObject(b);
 				list.add(bx);
 			}
 		}
-		logger.info("Retrieved "+list.size()+" bills from database.");
+		logger.info("Retrieved "+list.size()+" bills from the database.");
 		return list;
+	}
+	
+	@GET
+	@Path("billInfo")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Bill getBillInfo(@QueryParam("id") int billId,
+			@Context HttpServletRequest request) throws JSONException {
+		logger.info("Retrieving Bill info for Bill # "+billId+" from the database");
+		Bill bx = null;
+		try {
+			BillBO b = billDAO.getBillInfo(billId);
+			if (b!=null) {
+				bx = populateBillInfoObject(b);
+				logger.info("Retrieved info for Bill # "+billId+" from database.");
+			} else {
+				logger.error("Failed to retrieve info for Bill # "+billId+" from database.");
+			}
+		} catch (Exception ex) {
+			logger.error("Error ocurred while retrieving bill info for Bill # "+billId);
+		}
+		return bx;
 	}
 	
 	@POST
@@ -83,8 +95,8 @@ public class BillService extends Service {
 									@Context HttpServletRequest req) throws JSONException {
 		logger.info("Adding new bill "+request);
 		try {
-			Date dueDate = df.parse(request.getDueDate());
-			int userId = Integer.parseInt(request.getUserId());
+			final Date dueDate = df.parse(request.getDueDate());
+			final int userId = Integer.parseInt(request.getUserId());
 			final int billId = billDAO.addBill(request.getCompanyId(),
 							request.getLocation(),
 							request.getBillType(),
@@ -98,9 +110,29 @@ public class BillService extends Service {
 							request.getPaid());
 			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill added successfully.",billId);
 		} catch(ParseException ex) {
+			logger.error("Failed to add bill due to an error while parsing due date. "+ex.getMessage());
 			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. The format of Due Date is incorrect.");
 		} catch(Exception ex) {
 			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. Error: "+ex.getMessage());
 		}
+	}
+	
+	private Bill populateBillInfoObject(BillBO b) {
+		final Bill bx = new Bill();
+		bx.setId(b.getId());
+		bx.setMasterId(b.getMasterId());
+		bx.setAmount(b.getAmount());
+		bx.setDescription(b.getDescription());
+		bx.setLocation(b.getLocation());
+		bx.setCompany(b.getCompany());
+		bx.setFrequency(b.getFrequency());
+		bx.setPaymentMode(b.getPaymentMode());
+		bx.setStatus(b.getStatus());
+		bx.setUser(b.getUser());
+		bx.setDueDate(b.getDueDate());
+		bx.setDueDay(b.getDueDay());
+		bx.setDeleted(b.isDeleted());
+		bx.setCreationDate(tf.format(b.getCreationDate()));
+		return bx;
 	}
 }

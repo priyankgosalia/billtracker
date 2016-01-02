@@ -12,6 +12,7 @@
 	   	var serv = {};
 	   	serv.getBillsList = getBillsList;
 	   	serv.showAddBillDialog = showAddBillDialog;
+	   	serv.showViewBillDialog = showViewBillDialog;
 	   	serv.logout = logout;
 	   	serv.AuthenticationService = AuthenticationService;
 	   	serv.CompanyService = CompanyService;
@@ -25,7 +26,6 @@
 	                      {headerName: "Location", field: "location", width: 130, filter: 'set'},
 	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set'},
 	                      {headerName: "Addded by", field: "user", width: 90, filter: 'set'},
-	                      
 	                      {headerName: "Due Date", field: "dueDate", width: 90, filter: 'set'},
 	                      {headerName: "Status", field: "status", width: 80, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
 	                          if (params.value == "Paid") {
@@ -35,6 +35,14 @@
 	                          }
 	                      }},
 	                      {headerName: "Amount", field: "amount", width: 90, filter: 'number'},
+	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
+//                              var anchorViewLink = document.createElement("a");
+//                              anchorViewLink.appendChild(document.createTextNode('View'));
+//                              anchorViewLink.href="#"+params.data.id;
+//	                          	eturn anchorViewLink;
+	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View</a>';
+	                    	  return a;
+	                      }}
 	                  ];
 	    $scope.gridOptions = {
 	            columnDefs: columnDefs,
@@ -44,7 +52,8 @@
 	            rowSelection: 'single',
 	            enableColResize: true,
 	            isExternalFilterPresent: isExternalFilterPresent,
-	            doesExternalFilterPass: doesExternalFilterPass
+	            doesExternalFilterPass: doesExternalFilterPass,
+	            angularCompileRows:true
 	    };
 	    
 	    function isExternalFilterPresent() {
@@ -85,6 +94,19 @@
         	    template: 'pages/addBill.html',
         	    controller: 'AddBillController',
         	    controllerAs: 'abcm',
+        	    closeByEscape:true,
+        	    className: 'ngdialog-theme-default dialogwidth800',
+        	    cache:false,
+        	    scope:$scope
+        	});
+        }
+        
+        function showViewBillDialog(billId) {
+        	$scope.billId = billId;
+        	ngDialog.open({
+        	    template: 'pages/viewBill.html',
+        	    controller: 'ViewBillController',
+        	    controllerAs: 'vbcm',
         	    closeByEscape:true,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,

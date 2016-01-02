@@ -29,7 +29,7 @@ public class BillDAO extends SuperDAO {
 	private NamedParameterJdbcTemplate jdbcTemplate = null;
 	private SimpleJdbcTemplate sjdbcTemplate = null;
 	private static final String ALL_BILLS_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby,bf.description frequency, "+
-												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, bm.due_day, bm.due_date "+
+												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date "+
 												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c "+
 												"where b.master_bill_id = bm.id and bm.freq_id = bf.id and bm.user_id = u.id "+
 												"and bm.company_id = c.id order by b.id desc";
@@ -40,6 +40,10 @@ public class BillDAO extends SuperDAO {
 	private static final String NEW_BILL_INSTANCE_QUERY = "insert into bill(master_bill_id,amount,due_date,paid,deleted) values ("+
 															":master_bill_id,:amount,:due_date,:paid,0)";
 	private static final String LAST_ID_QUERY = "select last_insert_id()";
+	private static final String VIEW_BILL_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby, bf.description frequency, "+
+												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date "+
+												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c where b.master_bill_id = bm.id and "+
+												"bm.freq_id = bf.id and bm.user_id = u.id and bm.company_id = c.id and b.id=:bill_id";
 	
 	public BillDAO(NamedParameterJdbcTemplate template, SimpleJdbcTemplate stemplate) {
 		this.jdbcTemplate = template;
@@ -48,6 +52,18 @@ public class BillDAO extends SuperDAO {
 	
 	public List<BillBO> getAllBills() {
 		return jdbcTemplate.query(ALL_BILLS_QUERY, new AllBillsExtractor());
+	}
+	
+	public BillBO getBillInfo(int billId) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String,Object>();
+		logger.info("Querying the database for Bill #"+billId);
+		paramMap.put("bill_id",billId);
+		try {
+			return jdbcTemplate.query(VIEW_BILL_QUERY, paramMap, new BillInfoExtractor());
+		} catch (DataAccessException dex) {
+			logger.error("Error querying the Bill table(s): "+dex.getMessage());
+			throw new Exception (dex.getMessage());
+		}
 	}
 	
 	@Transactional(rollbackFor={Exception.class,DataAccessException.class})
@@ -93,28 +109,52 @@ public class BillDAO extends SuperDAO {
 			List<BillBO> retList = new LinkedList<BillBO>();
 			if (rs!=null) {
 				while(rs.next()) {
-					BillBO b = new BillBO();
-					b.setId(getInteger(rs,"id"));
-					b.setMasterId(getInteger(rs,"master_bill_id"));
-					b.setCompany(getString(rs,"company"));
-					b.setAmount(getDouble(rs,"amount"));
-					b.setLocation(getString(rs,"location"));
-					b.setUser(getString(rs,"addedby"));
-					b.setFrequency(getString(rs,"frequency"));
-					b.setDescription(getString(rs,"bill_desc"));
-					b.setPaymentMode(getString(rs,"payment_mode"));
-					b.setDueDay(getInteger(rs,"due_day"));
-					b.setDueDate(getDate(rs,"due_date"));
-					final int billStatus = getInteger(rs,"paid");
-					if (billStatus!=1) {
-						b.setStatus("Unpaid");
-					} else {
-						b.setStatus("Paid");
-					}
+					BillBO b = populateBillBOFromResultSet(rs);
 					retList.add(b);
 				}
 			}
 			return retList;
 		}
+	}
+	
+	static class BillInfoExtractor implements ResultSetExtractor<BillBO> {
+		public BillBO extractData(ResultSet rs) throws SQLException, DataAccessException {		
+			if (rs!=null) {
+				if(rs.next()) {
+					BillBO b = populateBillBOFromResultSet(rs);
+					return b;
+				}
+			}
+			return null;
+		}
+	}
+	
+	private static BillBO populateBillBOFromResultSet(ResultSet rs) throws SQLException {
+		BillBO b = new BillBO();
+		b.setId(getInteger(rs,"id"));
+		b.setMasterId(getInteger(rs,"master_bill_id"));
+		b.setCompany(getString(rs,"company"));
+		b.setAmount(getDouble(rs,"amount"));
+		b.setLocation(getString(rs,"location"));
+		b.setUser(getString(rs,"addedby"));
+		b.setFrequency(getString(rs,"frequency"));
+		b.setDescription(getString(rs,"bill_desc"));
+		b.setPaymentMode(getString(rs,"payment_mode"));
+		b.setDueDay(getInteger(rs,"due_day"));
+		b.setDueDate(getDate(rs,"due_date"));
+		final int billStatus = getInteger(rs,"paid");
+		if (billStatus!=1) {
+			b.setStatus("Unpaid");
+		} else {
+			b.setStatus("Paid");
+		}
+		final int billDeleted = getInteger(rs,"deleted");
+		if (billDeleted!=1) {
+			b.setDeleted(false);
+		} else {
+			b.setDeleted(true);
+		}
+		b.setCreationDate(getTimestamp(rs,"creation_date"));
+		return b;
 	}
 }
