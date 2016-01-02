@@ -39,16 +39,16 @@
 	  	
 	  	<form class="navbar-form navbar-left" name="form" role="form" ng-submit="cm.addCompany()">
 	  		<div class="form-group">
-				<div class="input-group">
+				<div class="input-group input-group-sm">
 					<div class="input-group-addon"><i class="fa fa-search"></i></div>
 					<input type="text" name="searchCompany" id="searchCompany" class="form-control" ng-model="searchCompany" placeholder="Search company" />
 				</div>
 				
-				&nbsp;&nbsp;&nbsp;<div class="input-group">
+				&nbsp;&nbsp;&nbsp;<div class="input-group input-group-sm">
 					<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
 					<input type="text" name="company" id="company" class="form-control" placeholder="Add new Company" ng-model="cm.company" required />
 				</div>
-				<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
+				<button type="submit" ng-disabled="form.$invalid" class="btn btn-sm btn-primary"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
 				<span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Company name is mandatory</span>
 			</div>
 		</form>
