@@ -128,13 +128,17 @@
         	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,0,function(response){
         		console.log(response);
         		var result = response.result;
+        		serv.dataLoading = false;
         		if (response.result == false) {
         			serv.addBillFailure = true;
         			serv.addBillFailureMessage = response.message;
         		} else {
+        			serv.addBillFailure = false;
+        			serv.addBillFailureMessage = null;
         			serv.addBillSuccess = true;
         			serv.addBillSuccessMessage = response.message;
         			serv.addBillId = response.billId;
+        			$scope.closeThisDialog('v');
         			alert("Bill added successfully. Bill ID is "+serv.addBillId);
         		}
         	});

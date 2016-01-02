@@ -37,8 +37,8 @@ public class BillDAO extends SuperDAO {
 														"payment_mode,user_id,description,due_day,due_date,auto_recur) values ("+
 														":company_id,:location,(select id from btrack.bill_freq where code=:freq_type),:amount,:payment_mode,:user_id,"+
 														":desc,:due_day,:due_date,:auto_recur)";
-	private static final String NEW_BILL_INSTANCE_QUERY = "insert into bill(master_bill_id,amount,paid,deleted) values ("+
-															":master_bill_id,:amount,:paid,0)";
+	private static final String NEW_BILL_INSTANCE_QUERY = "insert into bill(master_bill_id,amount,due_date,paid,deleted) values ("+
+															":master_bill_id,:amount,:due_date,:paid,0)";
 	private static final String LAST_ID_QUERY = "select last_insert_id()";
 	
 	public BillDAO(NamedParameterJdbcTemplate template, SimpleJdbcTemplate stemplate) {
@@ -50,10 +50,10 @@ public class BillDAO extends SuperDAO {
 		return jdbcTemplate.query(ALL_BILLS_QUERY, new AllBillsExtractor());
 	}
 	
-	@Transactional
+	@Transactional(rollbackFor={Exception.class,DataAccessException.class})
 	public int addBill(int companyId, String location, char freqType, Double amount,
 						String paymentMode, int userId, String desc, int dueDay,
-						Date dueDate, int autoRecur, int paid) {
+						Date dueDate, int autoRecur, int paid) throws Exception {
 		try {
 			// Step 1 - Insert into BILL_MASTER
 			logger.info("Inserting an entry into BILL_MASTER - Start");
@@ -84,7 +84,7 @@ public class BillDAO extends SuperDAO {
 			return lastBillInstanceId;
 		} catch (DataAccessException dex) {
 			logger.error("Error inserting entry into one of the bill tables: "+dex.getMessage());
-			return -1;
+			throw new Exception (dex.getMessage());
 		}
 	}
 	

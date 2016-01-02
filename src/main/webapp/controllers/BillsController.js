@@ -87,7 +87,8 @@
         	    controllerAs: 'abcm',
         	    closeByEscape:true,
         	    className: 'ngdialog-theme-default dialogwidth800',
-        	    cache:false
+        	    cache:false,
+        	    scope:$scope
         	});
         }
         

@@ -98,9 +98,9 @@ public class BillService extends Service {
 							request.getPaid());
 			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill added successfully.",billId);
 		} catch(ParseException ex) {
-			return AddBillResponse.getSuccessResponseWithMessage("Failed to add Bill. The format of Due Date is incorrect.");
+			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. The format of Due Date is incorrect.");
 		} catch(Exception ex) {
-			return AddBillResponse.getSuccessResponseWithMessage("Failed to add Bill. Exception: "+ex.getMessage());
+			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. Error: "+ex.getMessage());
 		}
 	}
 }
