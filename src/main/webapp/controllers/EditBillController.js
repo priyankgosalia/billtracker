@@ -97,12 +97,15 @@
                     	$('#recurrence').val(cm.recurrence);
                     	
                     	var d = new Date($scope.billInfo.dueDate),
+                    	
                         month = '' + (d.getMonth() + 1),
                         day = '' + d.getDate(),
                         year = d.getFullYear();
 	                    if (month.length < 2) month = '0' + month;
 	                    if (day.length < 2) day = '0' + day;
-	                    $scope.billInfo.dueDate=[day, month, year].join('/');
+	                    $scope.billInfo.dueDate=[day, month, year].join('-');
+	                    $('#dueDt').val($scope.billInfo.dueDate);
+	                    $("#dateRangePicker").datepicker("update", d);
 	                    if ($scope.billInfo.recurring == true) {
 	                    	$scope.recurringText = "(Recurring Bill)";
 	                    } else {

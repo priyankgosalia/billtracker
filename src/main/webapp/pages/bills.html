@@ -36,18 +36,18 @@
 	  	<nav class="navbar navbar-default">
 		  	<form class="navbar-form navbar-left" name="form" role="form" ng-submit="bm.showAddBillDialog()">
 		  		<div class="form-group">
-					<div class="input-group">
+					<div class="input-group input-group-sm">
 						<div class="input-group-addon"><i class="fa fa-search"></i></div>
 						<input type="text" name="searchBill" id="searchBill" class="form-control" placeholder="Search Bill" ng-model="gridOptions.quickFilterText"/>
 					</div>
 					&nbsp;&nbsp;&nbsp;
-					<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;New Bill&nbsp;</button>
+					<button type="submit" ng-disabled="form.$invalid" class="btn btn-sm btn-primary"><i class="fa fa-plus-square"></i> &nbsp;New Bill&nbsp;</button>
 				</div>
 			</form>
 		</nav>
 		<nav class="navbar navbar-default">
 			<form class="navbar-form navbar-left">
-			<div class="input-group">
+			<div class="input-group input-group-sm">
 				<input type="radio" name="billStatus" value="All" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="All Bills">&nbsp; All Bills</input>&nbsp;&nbsp;&nbsp;
 				<input type="radio" name="billStatus" value="Paid" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Paid">&nbsp; Paid</input>&nbsp;&nbsp;&nbsp;
 				<input type="radio" name="billStatus" value="Unpaid" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Unpaid">&nbsp; Unpaid</input>&nbsp;&nbsp;&nbsp;

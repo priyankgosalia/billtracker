@@ -11,7 +11,7 @@
 		<div ng-if="ebcm.addBillFailure">
 			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{ebcm.addBillFailureMessage}}</div>
 		</div>
-		<div class="input-group">
+		<div class="input-group input-group-sm">
 			<select class="selectpicker" id="billtypepicker" name="billfreq" width="fit" title="Select Bill Type">
 				<option ng-repeat="bt in billTypeList" value="{{ bt.billType }}"> {{ bt.billTypeDesc }} </option>
 			</select>
@@ -34,12 +34,12 @@
 						{{addCompanyResult}}
 					</div>
 				</div>
-				<div class="input-group">
+				<div class="input-group input-group-sm">
 					<select class="selectpicker" id="companypicker" title="Select Company" name="companylist" data-width="auto">
 						<option ng-repeat="company in companyList" value="{{ company.id }}"> {{ company.name }} </option>
 					</select>
 				</div> &nbsp;&nbsp;&nbsp;
-				<div class="input-group">
+				<div class="input-group input-group-sm">
 						<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
 						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="abcm.company" required />
 				</div>&nbsp;&nbsp;
@@ -52,14 +52,27 @@
 			<input type="hidden" name="compname" id="companyId" ng-model="abcm.company"/>
 			<input type="hidden" name="billtyp" id="billType" ng-model="abcm.billType"/>
 			<input type="hidden" name="rec" id="recurrence" ng-model="abcm.recurrence"/>
-			<div class="input-group input-append date" id="dateRangePicker">
+			<div class="input-group input-group-sm input-append date" id="dateRangePicker">
+				<span class="input-group-addon" id="basic-addon3">Due Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <input placeholder="Due Date" type="text" class="form-control" id="dueDt" name="date" />
                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-			<input type="text" placeholder="Location" class="form-control" id="location" aria-describedby="basic-addon3" ng-model="ebcm.location" size="100%" required>
-			<input type="text" placeholder="Bill Amount (in numbers only)" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.amount" required valid-number/>
-				<input type="text" placeholder="Bill Description" class="form-control" id="desc" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.description" required>
+            <div class="input-group input-group-sm">
+				<span class="input-group-addon" id="basic-addon3">Location&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<input type="text" placeholder="Enter a location" class="form-control" id="location" aria-describedby="basic-addon3" ng-model="ebcm.location" size="100%" required>
+			</div>
+			<div class="input-group input-group-sm">
+				<span class="input-group-addon" id="basic-addon3">Amount &#8377;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<input type="text" placeholder="Enter Bill Amount in Rupees (numbers only)" class="form-control" id="billamount" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.amount" required valid-number/>
+			</div>
+			<div class="input-group input-group-sm">
+				<span class="input-group-addon" id="basic-addon3">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<input type="text" placeholder="Enter a description" class="form-control" id="desc" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.description" required>
+			</div>
+			<div class="input-group input-group-sm">
+				<span class="input-group-addon" id="basic-addon3">Payment Mode</span>
 				<input type="text" placeholder="Mode of Payment" class="form-control" id="paymentmode" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.paymentMode" required>
+			</div>
 			<br/>
 			<div class="ngdialog-buttons">
 				<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog('Cancel')"> <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Cancel</button>
