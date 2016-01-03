@@ -140,6 +140,16 @@
         		alert ("You have not entered a due date for the Bill.");
         		return;
         	}
+        	// Do not allow the user to select date
+        	// between 29th and 31st of any month
+        	var day = dueDate.substring(0,2);
+        	if (day!=null) {
+        		var d = parseInt(day);
+        		if (day >= 29 && day <=31) {
+        			alert ("You are not allowed to select a date between 29th and 31st of a month.");
+            		return;
+        		}
+        	}
         	var userId = AuthenticationService.GetUserId()
         	// time to persist the data
         	serv.dataLoading = true;

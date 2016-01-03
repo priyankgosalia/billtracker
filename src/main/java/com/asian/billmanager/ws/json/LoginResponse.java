@@ -11,6 +11,7 @@ public class LoginResponse {
 	String message;
 	int userId;
 	String userFirstName;
+	boolean admin;
 	
 	public LoginResponse(boolean result) {
 		this.result = result;
@@ -68,5 +69,13 @@ public class LoginResponse {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 }

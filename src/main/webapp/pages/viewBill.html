@@ -46,7 +46,11 @@
 			</tr>
 			<tr>
 				<td><b>Created</b></td>
-				<td>by {{billInfo.user}} on {{billInfo.creationDate}}</td>
+				<td>
+					by {{billInfo.user}} on {{billInfo.creationDate}} <div ng-if="autoGen==true">
+						<h5><span class="label label-success">Auto-Generated</span></h5>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<td><b>Payment Status</b></td>

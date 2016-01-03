@@ -9,13 +9,13 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import com.asian.billmanager.ws.bo.UserBO;
 /*
- * UsersDao
+ * UserDAO
  * 
  * Created: 21-DEC-2015
  * Author:  Priyank Gosalia <priyankmg@gmail.com>
  */
 public class UserDAO extends SuperDAO {
-	private static final String USER_BY_USERNAME_QUERY = "SELECT id,username,password,firstname,lastname,enabled from btrack.users where username=:username";
+	private static final String USER_BY_USERNAME_QUERY = "SELECT id,username,password,firstname,lastname,enabled,is_admin from btrack.users where username=:username";
 	
 	private NamedParameterJdbcTemplate jdbcTemplate = null;
 	
@@ -40,6 +40,7 @@ public class UserDAO extends SuperDAO {
 					u.setFirstName(getString(rs,"firstname"));
 					u.setLastName(getString(rs,"lastname"));
 					u.setEnabled(getInteger(rs,"enabled")==1?true:false);
+					u.setAdmin(getInteger(rs,"is_admin")==1?true:false);
 					return u;
 				}
 			}

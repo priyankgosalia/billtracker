@@ -28,6 +28,7 @@
                     AuthenticationService.SetUsername(vm.username);
                     AuthenticationService.SetUserFirstName(response.userFirstName);
                     AuthenticationService.SetUserId(response.userId);
+                    AuthenticationService.SetAdmin(response.admin);
                     vm.loginFailure = false;
                     $location.path('/');
                 } else {

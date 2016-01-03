@@ -18,7 +18,9 @@
         service.SetUsername = SetUsername;
         service.SetUserId = SetUserId;
         service.GetUserId = GetUserId;
- 
+        service.SetAdmin = SetAdmin;
+        service.isAdmin = isAdmin;
+        
         return service;
  
         function Login(username, password, callback) {
@@ -46,6 +48,15 @@
         
         function GetUserId() {
         	return $window.sessionStorage.userId;
+        }
+        
+        function SetAdmin(adm) {
+        	$rootScope.globals.admin = adm;
+        	$window.sessionStorage.admin = adm;
+        }
+        
+        function isAdmin() {
+        	return $window.sessionStorage.admin;
         }
         
         function GetUserFirstName() {

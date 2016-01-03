@@ -108,7 +108,11 @@
 	<bean id="appContext" class="com.asian.billmanager.ws.context.ApplicationContextProvider"></bean>
 	
 	<!-- Start of Auto Bill Generator Job configuration section -->
-	<bean id="autoBillGenTask" class="com.asian.billmanager.tasks.AutoBillGeneratorTask" /> 
+	<bean id="autoBillGenTask" class="com.asian.billmanager.tasks.AutoBillGeneratorTask">
+		<constructor-arg>
+			<ref bean="billDao" />
+		</constructor-arg>
+	</bean> 
 	<bean name="autoBillGenJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="com.asian.billmanager.tasks.AutoBillGeneratorQuartzJob" />
 		<property name="jobDataAsMap">

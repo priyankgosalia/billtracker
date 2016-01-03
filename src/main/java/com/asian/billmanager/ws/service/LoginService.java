@@ -71,6 +71,7 @@ public class LoginService extends Service {
 								response = LoginResponse.getSuccessResponseWithMessage("Login successful for user '"+u.getUsername()+"'.");
 								response.setUserFirstName(u.getFirstName());
 								response.setUserId(u.getId());
+								response.setAdmin(u.isAdmin());
 								req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID, u.getId());
 								req.getSession().setAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_NAME, u.getUsername());
 								auditDAO.addLoginLog(u.getId(), 0);

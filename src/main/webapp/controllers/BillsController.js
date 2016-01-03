@@ -20,14 +20,23 @@
 	   	serv.currentUser = AuthenticationService.GetUsername();
 	   	serv.currentUserFirstName = AuthenticationService.GetUserFirstName();
         $scope.companyList = getCompanyList();
+        serv.isAdmin = AuthenticationService.isAdmin();
+        $scope.isAdmin = serv.isAdmin;
 	    
 	    var columnDefs = [
-	                      {headerName: "Bill #", field: "id", width: 75, filter: 'number', suppressSizeToFit:true},
+	                      {headerName: "Bill #", field: "id", width: 65, filter: 'number', suppressSizeToFit:true},
 	                      {headerName: "Company", field: "company", width: 170, filter: 'set'},
-	                      {headerName: "Location", field: "location", width: 130, filter: 'set'},
+	                      {headerName: "Location", field: "location", width: 100, filter: 'set'},
 	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set'},
-	                      {headerName: "Addded by", field: "user", width: 90, filter: 'set'},
-	                      {headerName: "Due Date", field: "dueDate", width: 90, filter: 'set'},
+	                      {headerName: "Recur.", field: "recurring", width: 80, filter: 'set',cellRenderer: function(params) {
+	                    	  if (params.data.recurring == true) {
+	                    		  return "Y";
+	                    	  } else {
+	                    		  return "N";
+	                    	  }
+	                      }},
+	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set'},
+	                      {headerName: "Owner", field: "user", width: 80, filter: 'set'},
 	                      {headerName: "Status", field: "status", width: 80, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
 	                          if (params.value == "Paid") {
 	                              return {'color': 'darkgreen'};
@@ -47,8 +56,13 @@
 	                      }},
 	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
 	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View</a>';
-	                    	  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
-	                    	  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
+	                    	  if (AuthenticationService.isAdmin() == "true") {
+	                    		  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
+	                    		  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
+	                    	  } else {
+	                    		  var b = '';
+	                    		  var c = '';
+	                    	  }
 	                    	  return a+'&nbsp;&nbsp;'+b+'&nbsp;&nbsp;'+c;
 	                      }}
 	                  ];
