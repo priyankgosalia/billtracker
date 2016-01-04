@@ -37,8 +37,10 @@ public class BillDAO extends SuperDAO {
 														"payment_mode,user_id,description,due_day,due_date,auto_recur) values ("+
 														":company_id,:location,(select id from btrack.bill_freq where code=:freq_type),:amount,:payment_mode,:user_id,"+
 														":desc,:due_day,:due_date,:auto_recur)";
+	private static final String NEW_REMINDER_MASTER_QUERY = "insert into reminder_master(master_bill_id,before_days) values (:master_bill_id,:reminder_days)";
 	private static final String NEW_BILL_INSTANCE_QUERY = "insert into bill(master_bill_id,amount,description,payment_mode,freq_id,due_date,paid,deleted,auto_generated) values ("+
 															":master_bill_id,:amount,:description,:payment_mode,(select id from btrack.bill_freq where code=:freq_type),:due_date,:paid,0,:auto_generated)";
+	private static final String NEW_REMINDER_INSTANCE_QUERY = "insert into reminder(master_reminder_id,bill_id,before_days) values (:master_reminder_id,:bill_id,:reminder_days)";
 	private static final String LAST_ID_QUERY = "select last_insert_id()";
 	private static final String VIEW_BILL_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby, bf.description frequency, b.auto_generated,"+
 												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
@@ -138,7 +140,7 @@ public class BillDAO extends SuperDAO {
 	@Transactional(rollbackFor={Exception.class,DataAccessException.class})
 	public int addBill(int companyId, String location, char freqType, Double amount,
 						String paymentMode, int userId, String desc, int dueDay,
-						Date dueDate, int autoRecur, int paid) throws Exception {
+						Date dueDate, int autoRecur, int paid, int reminderDays) throws Exception {
 		try {
 			// Step 1 - Insert into BILL_MASTER
 			logger.info("Inserting an entry into BILL_MASTER table - Start");
@@ -156,9 +158,9 @@ public class BillDAO extends SuperDAO {
 			KeyHolder keyHolder = new GeneratedKeyHolder();
 			jdbcTemplate.update(NEW_BILL_MASTER_QUERY, paramMap);
 			logger.info("Inserting an entry into BILL_MASTER table - End");
+			int lastBillMasterId = sjdbcTemplate.queryForObject(LAST_ID_QUERY,Integer.class);
 			// Step 2 - Insert into BILL
 			logger.info("Inserting an entry into BILL - Start");
-			int lastBillMasterId = sjdbcTemplate.queryForObject(LAST_ID_QUERY,Integer.class);
 			logger.info("Last generated bill master id = "+lastBillMasterId);
 			paramMap.put("master_bill_id", lastBillMasterId);
 			paramMap.put("paid", paid);
@@ -168,6 +170,19 @@ public class BillDAO extends SuperDAO {
 			logger.info("Inserting an entry into BILL - End");
 			int lastBillInstanceId = sjdbcTemplate.queryForObject(LAST_ID_QUERY,Integer.class);
 			logger.info("Last generated bill instance id = "+lastBillInstanceId);
+			// Step 3 - Insert into REMINDER_MASTER
+			logger.info("Inserting an entry into REMINDER_MASTER - Start");
+			paramMap.put("reminder_days", reminderDays);
+			jdbcTemplate.update(NEW_REMINDER_MASTER_QUERY, paramMap);
+			logger.info("Inserting an entry into REMINDER_MASTER - End");
+			int lastReminderMasterId = sjdbcTemplate.queryForObject("select id from btrack.reminder_master where master_bill_id="+lastBillMasterId,Integer.class);
+			logger.info("lastReminderMasterId="+lastReminderMasterId);
+			// Step 4 - Insert into REMINDER
+			logger.info("Inserting an entry into REMINDER - Start");
+			paramMap.put("master_reminder_id", lastReminderMasterId);
+			paramMap.put("bill_id", lastBillInstanceId);
+			jdbcTemplate.update(NEW_REMINDER_INSTANCE_QUERY, paramMap);
+			logger.info("Inserting an entry into REMINDER - End");
 			return lastBillInstanceId;
 		} catch (DataAccessException dex) {
 			logger.error("Error inserting entry into one of the bill tables: "+dex.getMessage());

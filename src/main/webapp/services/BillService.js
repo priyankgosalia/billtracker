@@ -50,7 +50,7 @@
         	});
         }
         
-        function addBill(companyId,billType,dueDate,location,amount,desc,paymentMode,userId,recurrence,callback) {
+        function addBill(companyId,billType,dueDate,location,amount,desc,paymentMode,userId,recurrence,reminder,callback) {
             $http.post('ws/bill/addBill', { companyId: companyId, 
             								billType: billType,
             								dueDate: dueDate,
@@ -60,7 +60,8 @@
             								paymentMode:paymentMode,
             								userId:userId,
             								paid:0,
-            								recurrence:recurrence})
+            								recurrence:recurrence,
+            								reminderDays:reminder})
                 .success(function (response) {
                 	console.log(response);
                     callback(response);

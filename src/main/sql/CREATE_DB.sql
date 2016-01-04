@@ -72,6 +72,33 @@ CREATE TABLE `btrack`.`bill` (
       ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
+CREATE TABLE `btrack`.`reminder_master` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`master_bill_id` INT NOT NULL,
+	`before_days` SMALLINT NOT NULL DEFAULT 0,
+	`creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
+	FOREIGN KEY (master_bill_id)
+      REFERENCES bill_master(id)
+      ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE `btrack`.`reminder` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`master_reminder_id` INT NOT NULL,
+	`bill_id` INT NOT NULL,
+	`before_days` SMALLINT NOT NULL DEFAULT 0,
+	`show` TINYINT(1) NOT NULL DEFAULT 1,
+	`creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
+	FOREIGN KEY (bill_id)
+      REFERENCES bill(id)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (master_reminder_id)
+      REFERENCES reminder_master(id)
+      ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB;
+
 -- Audit Tables
 CREATE TABLE `btrack`.`audit_logins` (
     `user_id` SMALLINT NOT NULL,

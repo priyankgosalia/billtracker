@@ -64,7 +64,7 @@
 	   	serv.addCompany = addCompany;
 	   	serv.addBill = addBill;
 	   	serv.dataLoading = false;
-	   	
+	   	serv.remindersetting="always";
         $scope.companyList = getCompanyList();
         $scope.billTypeList = getBillFreqList();
 	    
@@ -77,6 +77,8 @@
 		    	$('#companypicker').selectpicker("refresh");
 		    	$('#billtypepicker').selectpicker();
 		    	$('#billtypepicker').selectpicker("refresh");
+		    	$('#reminderDaysPicker').selectpicker();
+		    	$('#reminderDaysPicker').selectpicker("refresh");
 	    	},10);
 	    	$(function() {
 	    	    $('#companypicker').change(function() {
@@ -127,6 +129,13 @@
         	var billType = $('#billType').val();
         	var dueDate = $('#dueDt').val();
         	var recurrence = $('#recurrence').val();
+        	var reminder = serv.remindersetting;
+        	var reminderSetting = 0;
+        	if (reminder=="days") {
+        		var reminderSetting = $('#reminderDaysPicker').val();
+        	} else {
+        		reminderSetting = 0;
+        	}
         	// validations
         	if (companyId == null || companyId == '') {
         		alert ("You have not selected any Company.");
@@ -154,7 +163,7 @@
         	// time to persist the data
         	serv.dataLoading = true;
         	console.log(recurrence);
-        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,recurrence,function(response){
+        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,recurrence,reminderSetting,function(response){
         		console.log(response);
         		var result = response.result;
         		serv.dataLoading = false;

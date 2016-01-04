@@ -128,7 +128,8 @@ public class BillService extends Service {
 							dueDate.getDate(),
 							new java.sql.Date(dueDate.getTime()),
 							(request.isRecurrence())?1:0,
-							request.getPaid());
+							request.getPaid(),
+							request.getReminderDays());
 			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill added successfully.",billId);
 		} catch(ParseException ex) {
 			logger.error("Failed to add bill due to an error while parsing due date. "+ex.getMessage());

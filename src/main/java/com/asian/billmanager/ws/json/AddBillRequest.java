@@ -17,6 +17,7 @@ public class AddBillRequest {
 	String userId;
 	int paid;
 	boolean recurrence;
+	int reminderDays;
 	
 	@Override
 	public String toString() {
@@ -41,6 +42,8 @@ public class AddBillRequest {
 		builder.append(paid);
 		builder.append(", recurrence=");
 		builder.append(recurrence);
+		builder.append(", reminderDays=");
+		builder.append(reminderDays);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -104,5 +107,11 @@ public class AddBillRequest {
 	}
 	public void setRecurrence(boolean recurrence) {
 		this.recurrence = recurrence;
+	}
+	public int getReminderDays() {
+		return reminderDays;
+	}
+	public void setReminderDays(int reminderDays) {
+		this.reminderDays = reminderDays;
 	}
 }
