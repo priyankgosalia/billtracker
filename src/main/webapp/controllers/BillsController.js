@@ -14,6 +14,7 @@
 	   	serv.showAddBillDialog = showAddBillDialog;
 	   	serv.showViewBillDialog = showViewBillDialog;
 	   	serv.showEditBillDialog = showEditBillDialog;
+	   	serv.showDeleteBillDialog = showDeleteBillDialog;
 	   	serv.logout = logout;
 	   	serv.AuthenticationService = AuthenticationService;
 	   	serv.CompanyService = CompanyService;
@@ -71,6 +72,7 @@
 	            rowData: null,
 	            enableFilter: true,
 	            enableSorting: true,
+	            rowHeight: 23,
 	            rowSelection: 'single',
 	            enableColResize: true,
 	            isExternalFilterPresent: isExternalFilterPresent,
@@ -112,7 +114,7 @@
         return serv;
         
         function showAddBillDialog() {
-        	ngDialog.open({
+        	var addDlg = ngDialog.open({
         	    template: 'pages/addBill.html',
         	    controller: 'AddBillController',
         	    controllerAs: 'abcm',
@@ -121,6 +123,9 @@
         	    cache:false,
         	    scope:$scope
         	});
+	        addDlg.closePromise.then(function (data) {
+	        	getBillsList(); 
+	        });
         }
         
         function showViewBillDialog(billId) {
@@ -136,9 +141,25 @@
         	});
         }
         
+        function showDeleteBillDialog(billId) {
+        	$scope.billId = billId;
+        	var delDlg = ngDialog.open({
+        	    template: 'pages/deleteBill.html',
+        	    controller: 'DeleteBillController',
+        	    controllerAs: 'dbcm',
+        	    closeByEscape:true,
+        	    className: 'ngdialog-theme-default dialogwidth800',
+        	    cache:false,
+        	    scope:$scope
+        	});
+        	delDlg.closePromise.then(function (data) {
+	        	getBillsList(); 
+	        });
+        }
+        
         function showEditBillDialog(billId) {
         	$scope.billId = billId;
-        	ngDialog.open({
+        	var editDlg = ngDialog.open({
         	    template: 'pages/editBill.html',
         	    controller: 'EditBillController',
         	    controllerAs: 'ebcm',
@@ -146,6 +167,9 @@
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
+        	});
+        	editDlg.closePromise.then(function (data) {
+        		getBillsList(); 
         	});
         }
         

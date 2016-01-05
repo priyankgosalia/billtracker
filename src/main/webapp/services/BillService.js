@@ -10,6 +10,7 @@
         var cmservice = this;
         cmservice.getAllBills = getAllBills;
         cmservice.addBill = addBill;
+        cmservice.deleteBill = deleteBill;
         cmservice.getBillInfo = getBillInfo;
         cmservice.getBillInfoForEdit = getBillInfoForEdit;
         return cmservice;
@@ -62,6 +63,15 @@
             								paid:0,
             								recurrence:recurrence,
             								reminderDays:reminder})
+                .success(function (response) {
+                	console.log(response);
+                    callback(response);
+                });
+        }
+        
+        function deleteBill(billId,deleteRecur,callback) {
+            $http.post('ws/bill/deleteBill', { billId: billId, 
+            									deleteRecur:deleteRecur})
                 .success(function (response) {
                 	console.log(response);
                     callback(response);

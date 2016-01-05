@@ -57,7 +57,9 @@ public class BillDAO extends SuperDAO {
 												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c "+
 												"where b.master_bill_id = bm.id and b.freq_id = bf.id and bm.user_id = u.id and b.deleted = 0 "+
 												"and bm.company_id = c.id and bm.id = :master_bill_id order by b.due_date desc";
-	
+	private static final String DELETE_BILL_INSTANCE_QUERY = "update btrack.bill set deleted=:deleted where id=:bill_id";
+	private static final String DISABLE_BILL_RECURRENCE_QUERY = "update btrack.bill_master set auto_recur = :auto_recur where id = :master_bill_id";
+			
 	public BillDAO(NamedParameterJdbcTemplate template, SimpleJdbcTemplate stemplate) {
 		this.jdbcTemplate = template;
 		this.sjdbcTemplate = stemplate;
@@ -108,6 +110,31 @@ public class BillDAO extends SuperDAO {
 			return jdbcTemplate.query(ALL_BILLS_FOR_MASTER_BILL_QUERY, paramMap, new AllBillsExtractor());
 		} catch (DataAccessException dex) {
 			logger.error("Error querying the Bill table(s): "+dex.getMessage());
+			throw new Exception (dex.getMessage());
+		}
+	}
+	
+	@Transactional(rollbackFor={Exception.class})
+	public int deleteBill(int billId, boolean deleteRecur) throws Exception {
+		try {
+			// Update BILL table.
+			BillBO bill = getBillInfo(billId);
+			logger.info("Updating 'deleted' flag in BILL table - Start");
+			Map<String, Object> paramMap = new HashMap<String,Object>();
+			paramMap.put("bill_id", billId);
+			paramMap.put("deleted", 1);
+			int rowsAffected = jdbcTemplate.update(DELETE_BILL_INSTANCE_QUERY, paramMap);
+			logger.info("Updating 'deleted' flag in BILL table - End");
+			// Check if recurrence has to be permanently stopped.
+			// If so, update the master table.
+			if (deleteRecur) {
+				paramMap.put("auto_recur", 0);
+				paramMap.put("master_bill_id", bill.getMasterId());
+				jdbcTemplate.update(DISABLE_BILL_RECURRENCE_QUERY, paramMap);
+			}
+			return rowsAffected;
+		} catch (DataAccessException dex) {
+			logger.error("Error deleting bill: "+dex.getMessage());
 			throw new Exception (dex.getMessage());
 		}
 	}

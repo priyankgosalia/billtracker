@@ -1,16 +1,17 @@
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<h3 class="panel-title">
-			<i class="fa fa-list-alt"></i> &nbsp;&nbsp;Bill # {{billInfo.id}}
+			<i class="fa fa-list-alt"></i> &nbsp;&nbsp;Delete Bill # {{billInfo.id}}
 		</h3>
 	</div>
-	<div class="panel-body" ng-controller="ViewBillController as vbcm">
-		<div ng-if="vbcm.dataLoading">
+	<div class="panel-body" ng-controller="DeleteBillController as dbcm">
+		<div ng-if="dbcm.dataLoading">
 			<i class="fa fa-spinner fa-pulse"></i> <h4>Please wait...</h4>
 		</div>
-		<div ng-if="vbcm.viewBillFailure">
-			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{vbcm.viewBillFailureMessage}}</div>
+		<div ng-if="dbcm.deleteBillFailure">
+			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{dbcm.deleteBillFailureMessage}}</div>
 		</div>
+		<form name="delform" ng-submit="dbcm.deleteBill()">
 		<table class="table table-condensed table-striped table-bordered">
 			<tr>
 				<td><b>Bill #</b></td>
@@ -63,9 +64,25 @@
 					</div>
 				</td>
 			</tr>
+			<tr>
+				<td><b>Delete Options</b></td>
+				<td>
+					<div class="input-group input-group-sm" style="width:80%;">
+						<span class="input-group-addon text-left">
+							<input type="radio" name="billStatus" value="this" ng-model="dbcm.deleteOption"> Delete <b>this Bill</b></input>
+						</span>
+						<span ng-if="billInfo.recurring==true" class="input-group-addon text-left">
+							<input type="radio" name="billStatus" value="thisandrecur" ng-model="dbcm.deleteOption"> Delete this bill and <b>Stop generating recurring bills</b></input>
+						</span>
+					</div>
+				</td>
+			</tr>
 		</table>
+		<input type="hidden" id="billId" ng-model="dbcm.billId" value="{{billInfo.id}}"></input>
 		<div class="ngdialog-buttons">
-			<button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog('Close')"> <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Close</button>
-		</div>	
+			<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog('Close')"> <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> &nbsp;Cancel&nbsp;</button>
+			<button type="submit" class="ngdialog-button ngdialog-button-primary"><i class="fa fa-plus-square"></i> &nbsp;Delete&nbsp;</button>
+		</div>
+		</form>
 	</div>
 </div>

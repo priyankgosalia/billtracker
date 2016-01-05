@@ -23,6 +23,8 @@ import com.asian.billmanager.ws.dao.BillDAO;
 import com.asian.billmanager.ws.json.AddBillRequest;
 import com.asian.billmanager.ws.json.AddBillResponse;
 import com.asian.billmanager.ws.json.Bill;
+import com.asian.billmanager.ws.json.DeleteBillRequest;
+import com.asian.billmanager.ws.json.DeleteBillResponse;
 
 /*
  * BillService
@@ -136,6 +138,25 @@ public class BillService extends Service {
 			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. The format of Due Date is incorrect.");
 		} catch(Exception ex) {
 			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. Error: "+ex.getMessage());
+		}
+	}
+	
+	@POST
+	@Path("deleteBill")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public DeleteBillResponse deleteBill(DeleteBillRequest request,
+									@Context HttpServletRequest req) throws JSONException {
+		logger.info("Deleting bill "+request);
+		try {
+			int rowsAffected = billDAO.deleteBill(request.getBillId(),request.isDeleteRecur());
+			if (rowsAffected>0){
+				return DeleteBillResponse.getSuccessResponseWithMessage("Bill deleted successfully.");
+			} else {
+				return DeleteBillResponse.getFailureResponseWithMessage("Failed to delete Bill.");
+			}
+		} catch(Exception ex) {
+			return DeleteBillResponse.getFailureResponseWithMessage("Failed to delete Bill. Error: "+ex.getMessage());
 		}
 	}
 	
