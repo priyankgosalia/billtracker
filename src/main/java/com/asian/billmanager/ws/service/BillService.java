@@ -19,12 +19,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import com.asian.billmanager.ws.bo.BillBO;
+import com.asian.billmanager.ws.bo.ReminderBO;
 import com.asian.billmanager.ws.dao.BillDAO;
 import com.asian.billmanager.ws.json.AddBillRequest;
 import com.asian.billmanager.ws.json.AddBillResponse;
 import com.asian.billmanager.ws.json.Bill;
 import com.asian.billmanager.ws.json.DeleteBillRequest;
 import com.asian.billmanager.ws.json.DeleteBillResponse;
+import com.asian.billmanager.ws.json.Reminder;
 
 /*
  * BillService
@@ -65,6 +67,28 @@ public class BillService extends Service {
 			}
 		}
 		logger.info("Retrieved "+list.size()+" bills from the database.");
+		return list;
+	}
+	
+	@GET
+	@Path("getAllReminders")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Reminder> getAllReminders(@Context HttpServletRequest request) throws JSONException {
+		logger.info("Retrieving all reminders from database");
+		final List<Reminder> list = new LinkedList<Reminder>();
+		List<ReminderBO> remindersList = billDAO.getAllReminders();
+		if (remindersList!=null && remindersList.size()>0) {
+			for (ReminderBO rm:remindersList) {
+				Bill bx = populateBillInfoObject(rm.getBill());
+				Reminder rx = new Reminder();
+				rx.setBill(bx);
+				rx.setId(rm.getReminderId());
+				rx.setMasterReminderId(rm.getMasterReminderId());
+				rx.setDaysRemaining(rm.getDueDays());
+				list.add(rx);
+			}
+		}
+		logger.info("Retrieved "+list.size()+" reminders from the database.");
 		return list;
 	}
 	

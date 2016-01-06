@@ -9,6 +9,7 @@
     function BillService($http,AuthenticationService) {
         var cmservice = this;
         cmservice.getAllBills = getAllBills;
+        cmservice.getAllReminders = getAllReminders;
         cmservice.addBill = addBill;
         cmservice.deleteBill = deleteBill;
         cmservice.getBillInfo = getBillInfo;
@@ -24,6 +25,18 @@
 		        callback(response);
         	}, function errorCallback(response) {
         		console.log("getAllBills(Error) = "+response);
+        	});
+        }
+        
+        function getAllReminders(callback) {
+        	$http({
+        		  method: 'GET',
+        		  url: 'ws/bill/getAllReminders'
+        	}).then(function successCallback(response) {
+				console.log("getAllReminders(Success) = "+response);
+		        callback(response);
+        	}, function errorCallback(response) {
+        		console.log("getAllReminders(Error) = "+response);
         	});
         }
         

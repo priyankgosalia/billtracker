@@ -17,6 +17,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 import com.asian.billmanager.ws.bo.BillBO;
+import com.asian.billmanager.ws.bo.ReminderBO;
 
 /*
  * BillDAO
@@ -59,7 +60,13 @@ public class BillDAO extends SuperDAO {
 												"and bm.company_id = c.id and bm.id = :master_bill_id order by b.due_date desc";
 	private static final String DELETE_BILL_INSTANCE_QUERY = "update btrack.bill set deleted=:deleted where id=:bill_id";
 	private static final String DISABLE_BILL_RECURRENCE_QUERY = "update btrack.bill_master set auto_recur = :auto_recur where id = :master_bill_id";
-			
+	private static final String ALL_REMINDERS_QUERY = "select r.id reminder_id, r.master_reminder_id, r.bill_id id, b.master_bill_id, datediff(b.due_date,now()) as days_remaining, "+
+														"c.name company, b.amount,u.firstName addedby,bf.description frequency, b.auto_generated, "+
+														"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
+														"from reminder r, reminder_master rm, bill b, company c, users u, bill_freq bf, bill_master bm "+
+														"where (datediff(b.due_date,now()) <= rm.before_days or rm.before_days=0) and b.freq_id = bf.id and bm.user_id = u.id "+
+														"and b.master_bill_id = bm.id and b.deleted = 0 and bm.company_id = c.id and r.bill_id = b.id "+
+														"and r.master_reminder_id = rm.id order by days_remaining;";
 	public BillDAO(NamedParameterJdbcTemplate template, SimpleJdbcTemplate stemplate) {
 		this.jdbcTemplate = template;
 		this.sjdbcTemplate = stemplate;
@@ -67,6 +74,10 @@ public class BillDAO extends SuperDAO {
 	
 	public List<BillBO> getAllBills() {
 		return jdbcTemplate.query(ALL_BILLS_QUERY, new AllBillsExtractor());
+	}
+	
+	public List<ReminderBO> getAllReminders() {
+		return jdbcTemplate.query(ALL_REMINDERS_QUERY, new AllRemindersExtractor());
 	}
 	
 	public BillBO getBillInfo(int billId) throws Exception {
@@ -252,6 +263,21 @@ public class BillDAO extends SuperDAO {
 		}
 	}
 	
+	static class AllRemindersExtractor implements ResultSetExtractor<List<ReminderBO>> {
+		public List<ReminderBO> extractData(ResultSet rs) throws SQLException, DataAccessException {		
+			List<ReminderBO> retList = new LinkedList<ReminderBO>();
+			if (rs!=null) {
+				while(rs.next()) {
+					BillBO b = (BillBO) populateBillBOFromResultSet(rs);
+					ReminderBO r = populateReminderBOFromResultSet(rs);
+					r.setBill(b);
+					retList.add(r);
+				}
+			}
+			return retList;
+		}
+	}
+	
 	static class BillInfoExtractor implements ResultSetExtractor<BillBO> {
 		public BillBO extractData(ResultSet rs) throws SQLException, DataAccessException {		
 			if (rs!=null) {
@@ -274,6 +300,14 @@ public class BillDAO extends SuperDAO {
 			}
 			return null;
 		}
+	}
+	
+	private static ReminderBO populateReminderBOFromResultSet(ResultSet rs) throws SQLException {
+		ReminderBO r = new ReminderBO();
+		r.setReminderId(getInteger(rs,"reminder_id"));
+		r.setMasterReminderId(getInteger(rs,"master_reminder_id"));
+		r.setDueDays(getInteger(rs,"days_remaining"));
+		return r;
 	}
 	
 	private static BillBO populateBillBOFromResultSet(ResultSet rs) throws SQLException {
