@@ -27,7 +27,9 @@
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
-  <div class="panel panel-default panel-info">
+</nav>
+	Welcome home! {{ hm.currentUser }} !
+	<div class="panel panel-default panel-info">
 	  <!-- Default panel contents -->
 	  <div class="panel-heading"><h5>Reminders <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h5></div>
 	  <div class="panel-body">
@@ -41,6 +43,4 @@
 	  
 	  </div>
 	</div>
-</nav>
-	Welcome home! {{ hm.currentUser }} !
 </div>

@@ -20,13 +20,24 @@
         vm.BillService = BillService;
         
         var columnDefs = [
-	                      {headerName: "Bill #", field: "id", width: 65, filter: 'number', suppressSizeToFit:true},
-	                      {headerName: "Company", field: "bill.company", width: 170, filter: 'set'},
-	                      {headerName: "Location", field: "bill.location", width: 100, filter: 'set'},
-	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set'},
-	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set'},
-	                      {headerName: "Amount", field: "amount", width: 90, filter: 'set', cellRenderer: function(params) {
-	                    	  var text = '&#8377; '+params.data.amount;
+	                      {headerName: "Bill #", width: 65, filter: 'number', suppressSizeToFit:true, cellRenderer: function(params) {
+	                    	  return params.data.bill.id;
+	                      }},
+	                      {headerName: "Company", width: 170, filter: 'set', cellRenderer: function(params) {
+	                    	  return params.data.bill.company;
+	                      }},
+	                      {headerName: "Location", width: 100, filter: 'set', cellRenderer: function(params) {
+	                    	  return params.data.bill.location;
+	                      }},
+	                      {headerName: "Type", width: 90, filter: 'set', cellRenderer: function(params) {
+	                    	  return params.data.bill.frequency;
+	                      }},
+	                      {headerName: "Due Date", width: 100, filter: 'set', cellRenderer: function(params) {
+	                    	  var d = new Date(params.data.bill.dueDate);
+	                    	  return "X="+d;
+	                      }},
+	                      {headerName: "Amount", width: 90, filter: 'set', cellRenderer: function(params) {
+	                    	  var text = '&#8377; '+params.data.bill.amount;
 	                    	  return text;
 	                      }, cellStyle: function(params) {
 	                          if (params.value == "Paid") {
@@ -36,7 +47,7 @@
 	                          }
 	                      }},
 	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
-	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View</a>';
+	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View Bill</a>';
 	                    	  if (AuthenticationService.isAdmin() == "true") {
 	                    		  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
 	                    		  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
