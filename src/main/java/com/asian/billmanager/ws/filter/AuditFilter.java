@@ -29,9 +29,14 @@ public class AuditFilter implements ContainerRequestFilter {
 	
 	public ContainerRequest filter(ContainerRequest request) {
 		if (!request.getRequestUri().toString().contains("/login") && !request.getRequestUri().toString().contains("/metadata")) {
-			final int userId = (Integer)servletRequest.getSession().getAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID);
-			final String requestURI = servletRequest.getRequestURI().substring(servletRequest.getRequestURI().indexOf("/ws"));
-			logServiceInvocationToDB(requestURI, userId);
+			if (servletRequest.getSession().getAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID)!=null) {
+				int userId = -1;
+				userId = (Integer)servletRequest.getSession().getAttribute(ServiceConstants.SESSION_OBJ_CURRENT_USER_ID);
+				final String requestURI = servletRequest.getRequestURI().substring(servletRequest.getRequestURI().indexOf("/ws"));
+				logServiceInvocationToDB(requestURI, userId);
+			} else {
+				logger.error("Session expired!");
+			}
 		}
 		return request;
 	}

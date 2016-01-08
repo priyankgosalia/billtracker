@@ -63,6 +63,7 @@ CREATE TABLE `btrack`.`bill` (
 	`auto_generated` TINYINT(1) NOT NULL DEFAULT 0,
 	`due_date` DATE NOT NULL,
 	`creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+	`payment_date` DATETIME DEFAULT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (master_bill_id)
       REFERENCES bill_master(id)

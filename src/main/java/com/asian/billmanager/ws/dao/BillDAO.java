@@ -65,8 +65,10 @@ public class BillDAO extends SuperDAO {
 														"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
 														"from reminder r, reminder_master rm, bill b, company c, users u, bill_freq bf, bill_master bm "+
 														"where (datediff(b.due_date,now()) <= rm.before_days or rm.before_days=0) and b.freq_id = bf.id and bm.user_id = u.id "+
-														"and b.master_bill_id = bm.id and b.deleted = 0 and bm.company_id = c.id and r.bill_id = b.id "+
+														"and b.master_bill_id = bm.id and b.deleted = 0 and b.paid = 0 and bm.company_id = c.id and r.bill_id = b.id "+
 														"and r.master_reminder_id = rm.id order by days_remaining;";
+	private static final String MARK_AS_PAID_BILL_QUERY = "update btrack.bill set paid = 1, payment_date = CURRENT_TIMESTAMP where id=:billId";
+	
 	public BillDAO(NamedParameterJdbcTemplate template, SimpleJdbcTemplate stemplate) {
 		this.jdbcTemplate = template;
 		this.sjdbcTemplate = stemplate;
@@ -175,6 +177,22 @@ public class BillDAO extends SuperDAO {
 		}
 	}
 	
+	public int markPaid(int billId) throws Exception {
+		int ret = -1;
+		try {
+			// Step 1 - Insert into BILL_MASTER
+			logger.info("Marking Bill# "+billId+" in BILL table as Paid - Start");
+			Map<String, Object> paramMap = new HashMap<String,Object>();
+			paramMap.put("billId",billId);
+			ret = jdbcTemplate.update(MARK_AS_PAID_BILL_QUERY, paramMap);
+			logger.info("Marking Bill# "+billId+" in BILL table as Paid - End");
+		} catch (DataAccessException dex) {
+			logger.error("Error while marking a bill as paid in one of the bill tables: "+dex.getMessage());
+			throw new Exception (dex.getMessage());
+		}
+		return ret;
+	}
+	
 	@Transactional(rollbackFor={Exception.class,DataAccessException.class})
 	public int addBill(int companyId, String location, char freqType, Double amount,
 						String paymentMode, int userId, String desc, int dueDay,
@@ -196,7 +214,7 @@ public class BillDAO extends SuperDAO {
 			KeyHolder keyHolder = new GeneratedKeyHolder();
 			jdbcTemplate.update(NEW_BILL_MASTER_QUERY, paramMap);
 			logger.info("Inserting an entry into BILL_MASTER table - End");
-			int lastBillMasterId = sjdbcTemplate.queryForObject(LAST_ID_QUERY,Integer.class);
+			int lastBillMasterId = sjdbcTemplate.queryForObject("select max(id) from btrack.bill_master where company_id = "+companyId+" and user_id = "+userId,Integer.class);
 			// Step 2 - Insert into BILL
 			logger.info("Inserting an entry into BILL - Start");
 			logger.info("Last generated bill master id = "+lastBillMasterId);
@@ -206,7 +224,7 @@ public class BillDAO extends SuperDAO {
 			paramMap.put("description",desc);
 			jdbcTemplate.update(NEW_BILL_INSTANCE_QUERY, paramMap);
 			logger.info("Inserting an entry into BILL - End");
-			int lastBillInstanceId = sjdbcTemplate.queryForObject(LAST_ID_QUERY,Integer.class);
+			int lastBillInstanceId = sjdbcTemplate.queryForObject("select max(id) from btrack.bill where master_bill_id="+lastBillMasterId,Integer.class);
 			logger.info("Last generated bill instance id = "+lastBillInstanceId);
 			// Step 3 - Insert into REMINDER_MASTER
 			logger.info("Inserting an entry into REMINDER_MASTER - Start");

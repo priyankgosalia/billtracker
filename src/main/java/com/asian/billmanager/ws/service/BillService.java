@@ -165,6 +165,20 @@ public class BillService extends Service {
 		}
 	}
 	
+	@GET
+	@Path("markPaid")
+	@Produces(MediaType.APPLICATION_JSON)
+	public AddBillResponse markPaid(@QueryParam("id") int billId,
+									@Context HttpServletRequest req) throws JSONException {
+		logger.info("Marking bill "+billId+" as paid");
+		try {
+			billDAO.markPaid(billId);
+			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill marked as Paid successfully.",billId);
+		} catch(Exception ex) {
+			return AddBillResponse.getFailureResponseWithMessage("Failed to mark Bill as Paid. Error: "+ex.getMessage());
+		}
+	}
+	
 	@POST
 	@Path("deleteBill")
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -13,6 +13,7 @@
         cmservice.addBill = addBill;
         cmservice.deleteBill = deleteBill;
         cmservice.getBillInfo = getBillInfo;
+        cmservice.markPaid = markPaid;
         cmservice.getBillInfoForEdit = getBillInfoForEdit;
         return cmservice;
  
@@ -62,6 +63,18 @@
         	}, function errorCallback(response) {
         		console.log("getBillInfo(Error) = "+response);
         	});
+        }
+        
+        function markPaid(billId,callback) {
+        	$http({
+      		  method: 'GET',
+      		  url: 'ws/bill/markPaid'+'?id='+billId
+	      	}).then(function successCallback(response) {
+				console.log("markPaid(Success) = "+response);
+		        callback(response);
+	      	}, function errorCallback(response) {
+	      		console.log("markPaid(Error) = "+response);
+	      	});
         }
         
         function addBill(companyId,billType,dueDate,location,amount,desc,paymentMode,userId,recurrence,reminder,callback) {

@@ -1,0 +1,27 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			<i class="fa fa-list-alt"></i> &nbsp;&nbsp;Mark as Paid - Bill # {{billInfo.id}}
+		</h3>
+	</div>
+	<div class="panel-body" ng-controller="MarkPaidBillController as pbcm">
+		<form name="paidBillForm" role="form" ng-submit="pbcm.markPaid()">
+		<div ng-if="vbcm.dataLoading">
+			<i class="fa fa-spinner fa-pulse"></i> <h4>Please wait...</h4>
+		</div>
+		<div ng-if="vbcm.paidBillFailure">
+			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{vbcm.viewBillFailureMessage}}</div>
+		</div>
+		<div class="jumbotron">
+		  <div class="container">
+		    <h3>Mark this bill for <b>{{billInfo.company}}</b> of <b>&#8377; {{billInfo.amount}}</b> as Paid ?</h3>
+		  </div>
+		</div>
+		<div class="ngdialog-buttons">
+			<input type="hidden" name="ixd" id="billId" value="{{billInfo.id}}"/>
+			<button type="submit" class="ngdialog-button ngdialog-button-primary"> <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Yes </button>
+			<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog('Close')"> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> No </button>
+		</div>	
+		</form>
+	</div>
+</div>

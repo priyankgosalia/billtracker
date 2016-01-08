@@ -10,9 +10,8 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand">
-      	
-      		<i class="fa fa-user"></i> &nbsp; {{ hm.currentUserFirstName }}</a>
-      	
+    		<i class="fa fa-user"></i> &nbsp; {{ hm.currentUserFirstName }}
+    	</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -28,15 +27,16 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-	Welcome home! {{ hm.currentUser }} !
+	
 	<div class="panel panel-default panel-info">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading"><h5>Reminders <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h5></div>
+	  <div class="panel-heading"><h5>Bill Reminders <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h5></div>
 	  <div class="panel-body">
+	  	<h5 ng-if="billsList.length > 0">Hey {{ hm.currentUserFirstName }} ! You have {{billsList.length}} bills to be paid.</h5>
 	    <div ng-if="billsList.length == 0">
 	  		<div class="alert alert-warning alert-dismissible" role="alert">
 	  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	  		Hurray! No Reminders!</div>
+	  		Yay! No Bill Reminders!</div>
 	  	</div>
 	  	
 	  	<div ag-grid="gridOptions" class="ag-blue" style="height: 350px; width: 100%; margin-top: 4px;"></div>

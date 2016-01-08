@@ -5,57 +5,38 @@
 (function () {
     'use strict';
  
-    angular
-        .module('billApp')
-        .controller('HomeController', HomeController);
- 
-    HomeController.$inject = ['$location', '$scope', 'AuthenticationService','BillService','$rootScope', '$window'];
-    function HomeController($location, $scope, AuthenticationService, BillService, $rootScope, $window) {
-        var vm = this;
+    angular.module('billApp').controller('HomeController', HomeController);
+    HomeController.$inject = ['$location', '$scope', 'AuthenticationService','BillService','$rootScope', '$window', 'ngDialog'];
+    function HomeController($location, $scope, AuthenticationService, BillService, $rootScope, $window, ngDialog) {
+        var vm = {};
         vm.currentUser = AuthenticationService.GetUsername();
         vm.currentUserFirstName = AuthenticationService.GetUserFirstName();
         vm.logout = logout;
         vm.getRemindersList = getRemindersList;
         vm.AuthenticationService = AuthenticationService;
+        vm.showViewBillDlg = showViewBillDlg;
+        vm.showMarkPaidBillDlg = showMarkPaidBillDlg;
         vm.BillService = BillService;
         
         var columnDefs = [
-	                      {headerName: "Bill #", width: 65, filter: 'number', suppressSizeToFit:true, cellRenderer: function(params) {
-	                    	  return params.data.bill.id;
-	                      }},
-	                      {headerName: "Company", width: 170, filter: 'set', cellRenderer: function(params) {
-	                    	  return params.data.bill.company;
-	                      }},
-	                      {headerName: "Location", width: 100, filter: 'set', cellRenderer: function(params) {
-	                    	  return params.data.bill.location;
-	                      }},
-	                      {headerName: "Type", width: 90, filter: 'set', cellRenderer: function(params) {
-	                    	  return params.data.bill.frequency;
-	                      }},
-	                      {headerName: "Due Date", width: 100, filter: 'set', cellRenderer: function(params) {
-	                    	  var d = new Date(params.data.bill.dueDate);
-	                    	  return "X="+d;
-	                      }},
-	                      {headerName: "Amount", width: 90, filter: 'set', cellRenderer: function(params) {
-	                    	  var text = '&#8377; '+params.data.bill.amount;
+	                      {headerName: "Bill #", field: "id", width: 65, filter: 'number', suppressSizeToFit:true },
+	                      {headerName: "Company", field: "company", width: 170, filter: 'set'},
+	                      {headerName: "Location", field: "location", width: 100, filter: 'set' },
+	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set' },
+	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set'},
+	                      {headerName: "Amount", field: "amount", width: 90, filter: 'number', cellRenderer: function(params) {
+	                    	  var text = '&#8377; '+params.data.amount;
 	                    	  return text;
-	                      }, cellStyle: function(params) {
-	                          if (params.value == "Paid") {
-	                              return {'color': 'darkgreen'};
-	                          } else {
-	                        	  return {'color': 'darkred'};
-	                          }
 	                      }},
 	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
-	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View Bill</a>';
-	                    	  if (AuthenticationService.isAdmin() == "true") {
-	                    		  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
-	                    		  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
-	                    	  } else {
-	                    		  var b = '';
-	                    		  var c = '';
-	                    	  }
-	                    	  return a+'&nbsp;&nbsp;'+b+'&nbsp;&nbsp;'+c;
+	                    	  params.$scope.showViewBillDlg = vm.showViewBillDlg;
+	                    	  var a = '<a ng-click="showViewBillDlg('+params.data.id+');">View Bill</a>';
+	                    	  return a + '&nbsp;&nbsp;';
+	                      }},
+	                      {headerName: "Payment", field: "id", width: 100, cellRenderer: function(params) {
+	                    	  params.$scope.showMarkPaidBillDlg = vm.showMarkPaidBillDlg;
+	                    	  var a = '<a ng-click="showMarkPaidBillDlg('+params.data.id+');">Mark Paid</a>';
+	                    	  return a;
 	                      }}
 	                  ];
 	    $scope.gridOptions = {
@@ -81,12 +62,50 @@
 	    function getRemindersList() {
         	BillService.getAllReminders(function (response) {
                 if (response) {
-                    $scope.billsList = response.data;
-                    $scope.gridOptions.api.setRowData($scope.billsList);
+                    var jsonArr = [];
+                    for (var i = 0; i < response.data.length; i++) {
+                        jsonArr.push({
+                            id: response.data[i].bill.id,
+                            company: response.data[i].bill.company, 
+                            location: response.data[i].bill.location,
+                            frequency: response.data[i].bill.frequency,
+                            dueDate: response.data[i].bill.dueDate,
+                            amount: response.data[i].bill.amount,
+                        });
+                    	console.log(response.data[i]);
+                    }
+                    $scope.gridOptions.api.setRowData(jsonArr);
+                    $scope.billsList = jsonArr;
                 } else {
                 	$scope.billsList = null;
                 }
             });
+        }
+	    
+	    function showViewBillDlg(billId) {
+        	$scope.billId = billId;
+        	ngDialog.open({
+        	    template: 'pages/viewBill.html',
+        	    controller: 'ViewBillController',
+        	    controllerAs: 'vbcm',
+        	    closeByEscape:true,
+        	    className: 'ngdialog-theme-default dialogwidth800',
+        	    cache:false,
+        	    scope:$scope
+        	});
+        }
+	    
+	    function showMarkPaidBillDlg(billId) {
+        	$scope.billId = billId;
+        	ngDialog.open({
+        	    template: 'pages/markPaid.html',
+        	    controller: 'MarkPaidBillController',
+        	    controllerAs: 'pbcm',
+        	    closeByEscape:true,
+        	    className: 'ngdialog-theme-default dialogwidth800',
+        	    cache:false,
+        	    scope:$scope
+        	});
         }
 	    
         function logout() {
@@ -95,6 +114,8 @@
             	$location.path('/#/login');
         	}
         }
+        
+        
     }
  
 })();
