@@ -14,7 +14,7 @@
 	   	<!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li><a href="#/"> <i class="fa fa-tachometer"></i>&nbsp; Dashboard <span class="sr-only">(current)</span></a></li>
+	        <li><a href="#/"> <i class="fa fa-hand-pointer-o"></i>&nbsp; Reminders <span class="sr-only">(current)</span></a></li>
 	        <li><a href="#/bills/"> <i class="fa fa-book"></i>&nbsp; Bills <span class="sr-only">(current)</span></a></li>
 	        <li class="active"><a href="#/companies"> <i class="fa fa-users"></i>&nbsp; Companies <span class="sr-only">(current)</span></a></li>
 	      </ul>
@@ -24,9 +24,11 @@
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
-	<div class="panel panel-default panel-info">
+	<div class="panel panel-default panel-primary">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading"><h5>Companies <span ng-if="companyList.length > 0" class="badge">{{companyList.length}}</span></h5></div>
+	  <div class="panel-heading">
+	  	<h3 class="panel-title"><i class="fa fa-users"> &nbsp; </i>Companies <span ng-if="companyList.length > 0" class="badge">{{companyList.length}}</span></h3>
+	  </div>
 	  <div class="panel-body">
 	  	<div class="container-fluid">
 		  	<div ng-if="companyList.length == 0">

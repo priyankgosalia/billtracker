@@ -98,7 +98,7 @@ public class AutoBillGeneratorTask {
 							newBill.setPaymentMode(lastBill.getPaymentMode());
 							newBill.setDescription(lastBill.getDescription());
 							try {
-								int newBillId = billDao.addAutoGenBill(newBill);
+								final int newBillId = billDao.addAutoGenBill(newBill);
 								newBill.setId(newBillId);
 								successfulBills.add(newBill);
 							} catch(Exception ex) {

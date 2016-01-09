@@ -14,7 +14,7 @@
 	   	<!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li><a href="#/"> <i class="fa fa-tachometer"></i>&nbsp; Dashboard <span class="sr-only">(current)</span></a></li>
+	        <li><a href="#/"> <i class="fa fa-hand-pointer-o"></i>&nbsp; Reminders <span class="sr-only">(current)</span></a></li>
 	        <li class="active"><a href="#/bills/"> <i class="fa fa-book"></i>&nbsp; Bills <span class="sr-only">(current)</span></a></li>
 	        <li><a href="#/companies"> <i class="fa fa-users"></i>&nbsp; Companies <span class="sr-only">(current)</span></a></li>
 	      </ul>
@@ -24,18 +24,20 @@
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
-	<div class="panel panel-default panel-info">
+	<div class="panel panel-default panel-primary">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading"><h5>Bills <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h5></div>
+	  <div class="panel-heading">
+	  	<h3 class="panel-title"><i class="fa fa-book"> &nbsp; </i>Bills <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h3>
+	  </div>
 	  <div class="panel-body">
 	    <div ng-if="companyList.length == 0">
 	  		<div class="alert alert-warning alert-dismissible" role="alert">
 	  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	  		Sorry! No bills!</div>
+	  		No Bills!</div>
 	  	</div>
 	  	<form name="form" role="form" ng-submit="bm.showAddBillDialog()">
 	  		<div class="form-group">
-				<button type="submit" ng-disabled="form.$invalid" class="btn btn-sm btn-primary"><i class="fa fa-plus-square"></i> &nbsp;New Bill&nbsp;</button>
+				<button type="submit" ng-disabled="form.$invalid" class="btn btn-sm btn-success"><i class="fa fa-plus-square"></i> &nbsp;New Bill&nbsp;</button>
 			</div>
 		</form>
 		

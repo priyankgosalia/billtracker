@@ -36,7 +36,11 @@
 	                    		  return "N";
 	                    	  }
 	                      }},
-	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set'},
+	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set', cellRenderer: function(params) {
+	                    	  var date = new Date(params.data.dueDate);
+	                    	  var text = date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear();
+	                    	  return text;
+	                      }},
 	                      {headerName: "Owner", field: "user", width: 80, filter: 'set'},
 	                      {headerName: "Status", field: "status", width: 80, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
 	                          if (params.value == "Paid") {

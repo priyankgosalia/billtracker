@@ -42,6 +42,7 @@ public class BillDAO extends SuperDAO {
 	private static final String NEW_BILL_INSTANCE_QUERY = "insert into bill(master_bill_id,amount,description,payment_mode,freq_id,due_date,paid,deleted,auto_generated) values ("+
 															":master_bill_id,:amount,:description,:payment_mode,(select id from btrack.bill_freq where code=:freq_type),:due_date,:paid,0,:auto_generated)";
 	private static final String NEW_REMINDER_INSTANCE_QUERY = "insert into reminder(master_reminder_id,bill_id,before_days) values (:master_reminder_id,:bill_id,:reminder_days)";
+	private static final String NEW_REMINDER_FROM_EXISTING_MASTER_BILL_QUERY = "insert into btrack.reminder (master_reminder_id,bill_id,before_days,`show`) values ((select id from btrack.reminder_master where master_bill_id=:master_bill_id),:bill_id,(select before_days from btrack.reminder_master where master_bill_id=:master_bill_id),1)";
 	private static final String LAST_ID_QUERY = "select last_insert_id()";
 	private static final String VIEW_BILL_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby, bf.description frequency, b.auto_generated,"+
 												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
@@ -168,11 +169,16 @@ public class BillDAO extends SuperDAO {
 			paramMap.put("auto_generated", 1);
 			jdbcTemplate.update(NEW_BILL_INSTANCE_QUERY, paramMap);
 			logger.info("Inserting an entry into BILL table - End");
-			int lastBillInstanceId = sjdbcTemplate.queryForObject(LAST_ID_QUERY,Integer.class);
+			final int lastBillInstanceId = sjdbcTemplate.queryForObject("select max(id) from btrack.bill where master_bill_id="+bill.getMasterId(),Integer.class);
 			logger.info("Last generated bill instance id = "+lastBillInstanceId);
+			// Insert into REMINDER table.
+			logger.info("Inserting an entry into REMINDER table - Start");
+			paramMap.put("bill_id", lastBillInstanceId);
+			jdbcTemplate.update(NEW_REMINDER_FROM_EXISTING_MASTER_BILL_QUERY, paramMap);
+			logger.info("Inserting an entry into REMINDER table - End");
 			return lastBillInstanceId;
 		} catch (DataAccessException dex) {
-			logger.error("Error inserting entry into one of the bill tables: "+dex.getMessage());
+			logger.error("Error while autogenerating a bill: "+dex.getMessage());
 			throw new Exception (dex.getMessage());
 		}
 	}

@@ -23,14 +23,27 @@
 	                      {headerName: "Company", field: "company", width: 170, filter: 'set'},
 	                      {headerName: "Location", field: "location", width: 100, filter: 'set' },
 	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set' },
-	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set'},
+	                      {headerName: "Due in", field: "daysRemaining", width: 90, filter: 'number', cellRenderer: function(params) {
+	                    	  var text = '';
+	                    	  if (params.data.daysRemaining == 0) {
+	                    		  text = '<font color="darkred"><b>Immediate</b></font>';
+	                    	  } else {
+	                    		  text = params.data.daysRemaining + ' days';
+	                    	  }
+	                    	  return text;
+	                      }},
+	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set', cellRenderer: function(params) {
+	                    	  var date = new Date(params.data.dueDate);
+	                    	  var text = date.getDate() + '-' + date.getMonth()+1 + '-' + date.getFullYear();
+	                    	  return text;
+	                      }},
 	                      {headerName: "Amount", field: "amount", width: 90, filter: 'number', cellRenderer: function(params) {
 	                    	  var text = '&#8377; '+params.data.amount;
 	                    	  return text;
 	                      }},
 	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
 	                    	  params.$scope.showViewBillDlg = vm.showViewBillDlg;
-	                    	  var a = '<a ng-click="showViewBillDlg('+params.data.id+');">View Bill</a>';
+	                    	  var a = '<a ng-click="showViewBillDlg('+params.data.id+');">View</a>';
 	                    	  return a + '&nbsp;&nbsp;';
 	                      }},
 	                      {headerName: "Payment", field: "id", width: 100, cellRenderer: function(params) {
@@ -64,6 +77,10 @@
                 if (response) {
                     var jsonArr = [];
                     for (var i = 0; i < response.data.length; i++) {
+                    	var daysRem = response.data[i].daysRemaining;
+                    	if (daysRem<0) {
+                    		daysRem = 0;
+                    	}
                         jsonArr.push({
                             id: response.data[i].bill.id,
                             company: response.data[i].bill.company, 
@@ -71,6 +88,7 @@
                             frequency: response.data[i].bill.frequency,
                             dueDate: response.data[i].bill.dueDate,
                             amount: response.data[i].bill.amount,
+                            daysRemaining: daysRem
                         });
                     	console.log(response.data[i]);
                     }

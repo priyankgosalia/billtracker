@@ -17,7 +17,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#/"> <i class="fa fa-tachometer"></i>&nbsp; Dashboard <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="#/"> <i class="fa fa-hand-pointer-o"></i>&nbsp; Reminders <span class="sr-only">(current)</span></a></li>
         <li><a href="#/bills/"> <i class="fa fa-book"></i>&nbsp; Bills <span class="sr-only">(current)</span></a></li>
         <li><a href="#/companies/"> <i class="fa fa-users"></i>&nbsp; Companies <span class="sr-only">(current)</span></a></li>
       </ul>
@@ -28,19 +28,19 @@
   </div><!-- /.container-fluid -->
 </nav>
 	
-	<div class="panel panel-default panel-info">
+	<div class="panel panel-default panel-primary">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading"><h5>Bill Reminders <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h5></div>
+	  <div class="panel-heading">
+	  	<h3 class="panel-title"><i class="fa fa-hand-pointer-o"></i> &nbsp; Bill Reminders <span ng-if="billsList.length > 0" class="badge">{{billsList.length}}</span></h3>
+	  </div>
 	  <div class="panel-body">
-	  	<h5 ng-if="billsList.length > 0">Hey {{ hm.currentUserFirstName }} ! You have {{billsList.length}} bills to be paid.</h5>
+	  	<h4 ng-if="billsList.length > 0">Hey {{ hm.currentUserFirstName }} ! You have <span class="label label-danger">{{billsList.length}} unpaid bills </span></h4>
 	    <div ng-if="billsList.length == 0">
-	  		<div class="alert alert-warning alert-dismissible" role="alert">
-	  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	  		Yay! No Bill Reminders!</div>
+	  		<div class="alert alert-warning" role="alert">
+	  			Yay! No bill reminders for today.
+	  		</div>
 	  	</div>
-	  	
 	  	<div ag-grid="gridOptions" class="ag-blue" style="height: 350px; width: 100%; margin-top: 4px;"></div>
-	  
 	  </div>
 	</div>
 </div>

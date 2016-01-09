@@ -24,12 +24,10 @@
         
         function markPaid() {
         	var billId = $('#billId').val();
-        	alert (billId + " is goin to be paid");
         	var userId = AuthenticationService.GetUserId()
         	// time to persist the data
         	cm.dataLoading = true;
         	BillService.markPaid(billId,function(response){
-        		console.log(response);
         		var result = response.result;
         		cm.dataLoading = false;
         		if (response.result == false) {
@@ -41,7 +39,7 @@
         			cm.paidBillSuccess = true;
         			cm.paidBillSuccessMessage = response.message;
         			cm.paidBillId = response.billId;
-        			$scope.closeThisDialog(serv.addBillId);
+        			$scope.closeThisDialog();
         			alert("Bill paid successfully.");
         		}
         	});
