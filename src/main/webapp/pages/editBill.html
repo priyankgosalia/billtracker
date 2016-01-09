@@ -4,6 +4,7 @@
 			<i class="fa fa-list-alt"></i> &nbsp;&nbsp;Edit Bill # {{billInfo.id}}
 		</h3>
 	</div>
+	
 	<div class="panel-body" ng-controller="EditBillController as ebcm">
 		<div ng-if="ebcm.dataLoading">
 			<i class="fa fa-spinner fa-pulse"></i> <h4>Please wait...</h4>
@@ -11,6 +12,7 @@
 		<div ng-if="ebcm.addBillFailure">
 			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{ebcm.addBillFailureMessage}}</div>
 		</div>
+		<label>Bill Type</label>
 		<div class="input-group input-group-sm">
 			<select class="selectpicker" id="billtypepicker" name="billfreq" width="fit" title="Select Bill Type">
 				<option ng-repeat="bt in billTypeList" value="{{ bt.billType }}"> {{ bt.billTypeDesc }} </option>
@@ -20,6 +22,7 @@
 		    </div>
 		</div>
 		<br/>
+		<label>Company</label>
 		<nav class="navbar navbar-default">
 			<form class="navbar-form navbar-left" name="addform" role="form" ng-submit="ebcm.addCompany()">
 				<div ng-if="addCompanyStatus == 'OK'">
@@ -48,7 +51,8 @@
 			</form>
 			<br/>
 		</nav>
-		<form name="billform" role="form" ng-submit="ebcm.editBill()">
+		<label>Bill Details</label>
+		<form name="billform" role="form" ng-submit="ebcm.updateBill()">
 			<input type="hidden" name="compname" id="companyId" ng-model="abcm.company"/>
 			<input type="hidden" name="billtyp" id="billType" ng-model="abcm.billType"/>
 			<input type="hidden" name="rec" id="recurrence" ng-model="abcm.recurrence"/>
@@ -72,6 +76,19 @@
 			<div class="input-group input-group-sm">
 				<span class="input-group-addon" id="basic-addon3">Payment Mode</span>
 				<input type="text" placeholder="Mode of Payment" class="form-control" id="paymentmode" aria-describedby="basic-addon3" size="100%" ng-model="ebcm.paymentMode" required>
+			</div>
+			<br/>
+			<label>Reminder</label>
+			<div class="input-group input-group-sm">
+				<span class="input-group-addon">
+					<input size="100%" type="radio" id="remAlways" name="reminderSetting" value="always" ng-model="ebcm.remindersetting">&nbsp; Always Remind</input>&nbsp;&nbsp;&nbsp;
+				</span>
+				<span class="input-group-addon">
+					<input size="100%" type="radio" id="remNumber" name="reminderSetting" value="days" ng-model="ebcm.remindersetting">&nbsp; Remind</input>
+					<select class="selectpicker" id="reminderDaysPicker" name="reminderDays" data-width="auto">
+						<option ng-repeat="n in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]" value="{{ n }}"> {{ n }} </option>
+					</select> days before due date.
+				</span>
 			</div>
 			<br/>
 			<div class="ngdialog-buttons">

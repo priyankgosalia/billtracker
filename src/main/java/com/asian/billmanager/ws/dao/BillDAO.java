@@ -30,10 +30,10 @@ public class BillDAO extends SuperDAO {
 	private NamedParameterJdbcTemplate jdbcTemplate = null;
 	private SimpleJdbcTemplate sjdbcTemplate = null;
 	private static final String ALL_BILLS_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby,bf.description frequency, b.auto_generated,"+
-												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
-												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c "+
+												"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur, rm.before_days "+
+												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c left outer join btrack.reminder_master rm on master_bill_id = rm.master_bill_id "+
 												"where b.master_bill_id = bm.id and b.freq_id = bf.id and bm.user_id = u.id and b.deleted = 0 "+
-												"and bm.company_id = c.id order by b.id desc";
+												"and bm.company_id = c.id and rm.master_bill_id = bm.id order by b.id desc";
 	private static final String NEW_BILL_MASTER_QUERY = "insert into bill_master(company_id,location,freq_id,amount,"+
 														"payment_mode,user_id,description,due_day,due_date,auto_recur) values ("+
 														":company_id,:location,(select id from btrack.bill_freq where code=:freq_type),:amount,:payment_mode,:user_id,"+
@@ -45,27 +45,28 @@ public class BillDAO extends SuperDAO {
 	private static final String NEW_REMINDER_FROM_EXISTING_MASTER_BILL_QUERY = "insert into btrack.reminder (master_reminder_id,bill_id,before_days,`show`) values ((select id from btrack.reminder_master where master_bill_id=:master_bill_id),:bill_id,(select before_days from btrack.reminder_master where master_bill_id=:master_bill_id),1)";
 	private static final String LAST_ID_QUERY = "select last_insert_id()";
 	private static final String VIEW_BILL_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby, bf.description frequency, b.auto_generated,"+
-												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
-												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c where b.master_bill_id = bm.id and "+
-												"b.freq_id = bf.id and bm.user_id = u.id and bm.company_id = c.id and b.id=:bill_id";
+												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur,"+
+												"rm.before_days from btrack.bill_master bm, bill b, bill_freq bf, users u, company c left outer join btrack.reminder_master rm "+
+												"on master_bill_id=rm.master_bill_id where b.master_bill_id = bm.id and b.freq_id = bf.id and bm.user_id = u.id and bm.company_id = c.id and b.id=:bill_id "+
+												"and bm.id = rm.master_bill_id";
 	private static final String EDIT_BILL_QUERY = "select b.id,bm.id master_bill_id,c.id company,b.amount,u.firstName addedby, bf.code frequency, b.auto_generated,"+
-												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
-												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c where b.master_bill_id = bm.id and "+
-												"b.freq_id = bf.id and bm.user_id = u.id and bm.company_id = c.id and b.id=:bill_id";
+												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur, rm.before_days "+
+												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c left outer join btrack.reminder_master rm on master_bill_id = rm.master_bill_id "+
+												"where b.master_bill_id = bm.id and b.freq_id = bf.id and bm.user_id = u.id and bm.company_id = c.id and b.id=:bill_id and bm.id = rm.master_bill_id";
 	private static final String ALL_ACTIVE_RECURRING_BILLS_QUERY = "select bm.id, bf.code, bm.amount, bm.description, bm.location, bm.payment_mode, bm.due_date, bm.due_day from bill_master bm,"+
 																" bill_freq bf where bm.freq_id = bf.id and bm.auto_recur = 1";
 	private static final String ALL_BILLS_FOR_MASTER_BILL_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby,bf.code frequency, b.auto_generated,"+
-												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
-												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c "+
+												"b.payment_mode, bm.location, b.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur, rm.before_days "+
+												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c left outer join reminder_master rm on master_bill_id = rm.master_bill_id "+
 												"where b.master_bill_id = bm.id and b.freq_id = bf.id and bm.user_id = u.id and b.deleted = 0 "+
 												"and bm.company_id = c.id and bm.id = :master_bill_id order by b.due_date desc";
 	private static final String DELETE_BILL_INSTANCE_QUERY = "update btrack.bill set deleted=:deleted where id=:bill_id";
 	private static final String DISABLE_BILL_RECURRENCE_QUERY = "update btrack.bill_master set auto_recur = :auto_recur where id = :master_bill_id";
 	private static final String ALL_REMINDERS_QUERY = "select r.id reminder_id, r.master_reminder_id, r.bill_id id, b.master_bill_id, datediff(b.due_date,now()) as days_remaining, "+
-														"c.name company, b.amount,u.firstName addedby,bf.description frequency, b.auto_generated, "+
+														"c.name company, b.amount,u.firstName addedby,bf.description frequency, b.auto_generated, rm.before_days, "+
 														"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur "+
-														"from reminder r, reminder_master rm, bill b, company c, users u, bill_freq bf, bill_master bm "+
-														"where (datediff(b.due_date,now()) <= rm.before_days or rm.before_days=0) and b.freq_id = bf.id and bm.user_id = u.id "+
+														"from reminder r, bill b, company c, users u, bill_freq bf, bill_master bm left outer join reminder_master rm on "+
+														"master_bill_id = rm.master_bill_id where (datediff(b.due_date,now()) <= rm.before_days or rm.before_days=0) and b.freq_id = bf.id and bm.user_id = u.id "+
 														"and b.master_bill_id = bm.id and b.deleted = 0 and b.paid = 0 and bm.company_id = c.id and r.bill_id = b.id "+
 														"and r.master_reminder_id = rm.id order by days_remaining;";
 	private static final String MARK_AS_PAID_BILL_QUERY = "update btrack.bill set paid = 1, payment_date = CURRENT_TIMESTAMP where id=:billId";
@@ -372,6 +373,7 @@ public class BillDAO extends SuperDAO {
 			b.setAutoGenerated(true);
 		}
 		b.setCreationDate(getTimestamp(rs,"creation_date"));
+		b.setReminderDays(getInteger(rs,"before_days"));
 		return b;
 	}
 }

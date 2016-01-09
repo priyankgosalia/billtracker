@@ -34,7 +34,7 @@
 	                      }},
 	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set', cellRenderer: function(params) {
 	                    	  var date = new Date(params.data.dueDate);
-	                    	  var text = date.getDate() + '-' + date.getMonth()+1 + '-' + date.getFullYear();
+	                    	  var text = date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear();
 	                    	  return text;
 	                      }},
 	                      {headerName: "Amount", field: "amount", width: 90, filter: 'number', cellRenderer: function(params) {
@@ -102,7 +102,7 @@
 	    
 	    function showViewBillDlg(billId) {
         	$scope.billId = billId;
-        	ngDialog.open({
+        	var dlg = ngDialog.open({
         	    template: 'pages/viewBill.html',
         	    controller: 'ViewBillController',
         	    controllerAs: 'vbcm',
@@ -115,7 +115,7 @@
 	    
 	    function showMarkPaidBillDlg(billId) {
         	$scope.billId = billId;
-        	ngDialog.open({
+        	var dlg = ngDialog.open({
         	    template: 'pages/markPaid.html',
         	    controller: 'MarkPaidBillController',
         	    controllerAs: 'pbcm',
@@ -124,6 +124,9 @@
         	    cache:false,
         	    scope:$scope
         	});
+        	dlg.closePromise.then(function (data) {
+        		getRemindersList(); 
+	        });
         }
 	    
         function logout() {

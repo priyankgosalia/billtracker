@@ -14,6 +14,7 @@
 	   	cm.currentUser = AuthenticationService.GetUsername();
 	   	cm.currentUserFirstName = AuthenticationService.GetUserFirstName();
 	   	cm.getBillInfo = getBillInfo;
+	   	cm.updateBill = updateBill;
 	   	cm.dataLoading = false;
 	   	
 	   	$scope.companyList = getCompanyList();
@@ -73,6 +74,64 @@
 	    });
 
         return cm;
+        
+        function updateBill() {
+        	var companyId = $('#companyId').val();
+        	var billType = $('#billType').val();
+        	var dueDate = $('#dueDt').val();
+        	var recurrence = $('#recurrence').val();
+        	var reminder = serv.remindersetting;
+        	var reminderSetting = 0;
+        	if (reminder=="days") {
+        		var reminderSetting = $('#reminderDaysPicker').val();
+        	} else {
+        		reminderSetting = 0;
+        	}
+        	// validations
+        	if (companyId == null || companyId == '') {
+        		alert ("You have not selected any Company.");
+        		return;
+        	}
+        	if (billType == null || billType == '') {
+        		alert ("You have not selected the type of Bill.");
+        		return;
+        	}
+        	if (dueDate == null || dueDate == '') {
+        		alert ("You have not entered a due date for the Bill.");
+        		return;
+        	}
+        	// Do not allow the user to select date
+        	// between 29th and 31st of any month
+        	var day = dueDate.substring(0,2);
+        	if (day!=null) {
+        		var d = parseInt(day);
+        		if (day >= 29 && day <=31) {
+        			alert ("You are not allowed to select a date between 29th and 31st of a month.");
+            		return;
+        		}
+        	}
+        	var userId = AuthenticationService.GetUserId()
+        	// time to persist the data
+        	serv.dataLoading = true;
+        	console.log(recurrence);
+        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,recurrence,reminderSetting,function(response){
+        		console.log(response);
+        		var result = response.result;
+        		serv.dataLoading = false;
+        		if (response.result == false) {
+        			serv.addBillFailure = true;
+        			serv.addBillFailureMessage = response.message;
+        		} else {
+        			serv.addBillFailure = false;
+        			serv.addBillFailureMessage = null;
+        			serv.addBillSuccess = true;
+        			serv.addBillSuccessMessage = response.message;
+        			serv.addBillId = response.billId;
+        			$scope.closeThisDialog(serv.addBillId);
+        			alert("Bill added successfully. Bill ID is "+serv.addBillId);
+        		}
+        	});
+        }
 
         function getBillInfo(billId) {
         	cm.dataLoading = true;
@@ -88,6 +147,14 @@
                     	cm.billType = $scope.billInfo.frequency;
                     	cm.company = $scope.billInfo.company;
                     	cm.recurrence = $scope.billInfo.recurring;
+                    	cm.reminderDays = $scope.billInfo.reminderDays;
+                    	
+                    	if (cm.reminderDays!=null && cm.reminderDays>0) {
+                    		$('#remNumber').prop("checked", true);
+                    		$('#reminderDaysPicker').val(cm.reminderDays);
+                    	} else {
+                    		$('#remAlways').prop("checked", true);
+                    	}
                     	
                     	$('#recurcheckbox').prop("checked", cm.recurrence);
 	    	        	$('#recurrence').val(cm.recurrence);
