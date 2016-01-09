@@ -41,7 +41,7 @@
 	                    	  var text = date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear();
 	                    	  return text;
 	                      }},
-	                      {headerName: "Owner", field: "user", width: 80, filter: 'set'},
+	                      {headerName: "Owner", field: "user", width: 75, filter: 'set'},
 	                      {headerName: "Status", field: "status", width: 80, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
 	                          if (params.value == "Paid") {
 	                              return {'color': 'darkgreen'};
@@ -49,7 +49,7 @@
 	                        	  return {'color': 'darkred'};
 	                          }
 	                      }},
-	                      {headerName: "Amount", field: "amount", width: 90, filter: 'set', cellRenderer: function(params) {
+	                      {headerName: "Amount", field: "amount", width: 100, filter: 'set', cellRenderer: function(params) {
 	                    	  var text = '&#8377; '+params.data.amount;
 	                    	  return text;
 	                      }, cellStyle: function(params) {
