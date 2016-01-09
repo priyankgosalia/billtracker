@@ -4,7 +4,7 @@
 	<groupId>com.asian</groupId>
 	<artifactId>billmanager</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<name>Asian Infotel Bill Management WebApp</name>
 	<description>Bill Tracking and Management application developed exclusively for Asian Infotel.</description>
 	<url>http://asian-associates.com/</url>
