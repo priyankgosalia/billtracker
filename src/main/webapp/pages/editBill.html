@@ -10,7 +10,11 @@
 			<i class="fa fa-spinner fa-pulse"></i> <h4>Please wait...</h4>
 		</div>
 		<div ng-if="ebcm.addBillFailure">
-			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{ebcm.addBillFailureMessage}}</div>
+			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{ebcm.editBillFailureMessage}}</div>
+		</div>
+		<div ng-if="ebcm.recurrence" class="well">
+			<b><u>Important note:</u></b> You are editing a <b>Recurring Bill</b>. Any change that you make to this bill will be applied to 
+			all the automatically generated bills for this bill in the future.
 		</div>
 		<label>Bill Type</label>
 		<div class="input-group input-group-sm">
@@ -44,7 +48,7 @@
 				</div> &nbsp;&nbsp;&nbsp;
 				<div class="input-group input-group-sm">
 						<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
-						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="abcm.company" required />
+						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="ebcm.company" required />
 				</div>&nbsp;&nbsp;
 				<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
 				<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>
@@ -53,9 +57,9 @@
 		</nav>
 		<label>Bill Details</label>
 		<form name="billform" role="form" ng-submit="ebcm.updateBill()">
-			<input type="hidden" name="compname" id="companyId" ng-model="abcm.company"/>
-			<input type="hidden" name="billtyp" id="billType" ng-model="abcm.billType"/>
-			<input type="hidden" name="rec" id="recurrence" ng-model="abcm.recurrence"/>
+			<input type="hidden" name="compname" id="companyId" ng-model="ebcm.company"/>
+			<input type="hidden" name="billtyp" id="billType" ng-model="ebcm.billType"/>
+			<input type="hidden" name="rec" id="recurrence" ng-model="ebcm.recurrence"/>
 			<div class="input-group input-group-sm input-append date" id="dateRangePicker">
 				<span class="input-group-addon" id="basic-addon3">Due Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <input placeholder="Due Date" type="text" class="form-control" id="dueDt" name="date" />

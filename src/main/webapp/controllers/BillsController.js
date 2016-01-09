@@ -15,6 +15,7 @@
 	   	serv.showViewBillDialog = showViewBillDialog;
 	   	serv.showEditBillDialog = showEditBillDialog;
 	   	serv.showDeleteBillDialog = showDeleteBillDialog;
+	   	serv.showMarkPaidBillDlg = showMarkPaidBillDlg;
 	   	serv.logout = logout;
 	   	serv.AuthenticationService = AuthenticationService;
 	   	serv.CompanyService = CompanyService;
@@ -26,30 +27,30 @@
 	    
 	    var columnDefs = [
 	                      {headerName: "Bill #", field: "id", width: 65, filter: 'number', suppressSizeToFit:true},
-	                      {headerName: "Company", field: "company", width: 170, filter: 'set'},
+	                      {headerName: "Company", field: "company", width: 150, filter: 'set'},
 	                      {headerName: "Location", field: "location", width: 100, filter: 'set'},
-	                      {headerName: "Type", field: "frequency", width: 90, filter: 'set'},
-	                      {headerName: "Recur.", field: "recurring", width: 80, filter: 'set',cellRenderer: function(params) {
+	                      {headerName: "Type", field: "frequency", width: 80, filter: 'set'},
+	                      {headerName: "Rec.", field: "recurring", width: 60, filter: 'set',cellRenderer: function(params) {
 	                    	  if (params.data.recurring == true) {
 	                    		  return "Y";
 	                    	  } else {
 	                    		  return "N";
 	                    	  }
 	                      }},
-	                      {headerName: "Due Date", field: "dueDate", width: 100, filter: 'set', cellRenderer: function(params) {
+	                      {headerName: "Due Date", field: "dueDate", width: 90, filter: 'set', cellRenderer: function(params) {
 	                    	  var date = new Date(params.data.dueDate);
 	                    	  var text = date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear();
 	                    	  return text;
 	                      }},
 	                      {headerName: "Owner", field: "user", width: 75, filter: 'set'},
-	                      {headerName: "Status", field: "status", width: 80, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
+	                      {headerName: "Status", field: "status", width: 75, filter: 'set', suppressSizeToFit:true, cellStyle: function(params) {
 	                          if (params.value == "Paid") {
 	                              return {'color': 'darkgreen'};
 	                          } else {
 	                        	  return {'color': 'darkred'};
 	                          }
 	                      }},
-	                      {headerName: "Amount", field: "amount", width: 100, filter: 'set', cellRenderer: function(params) {
+	                      {headerName: "Amount", field: "amount", width: 90, filter: 'set', cellRenderer: function(params) {
 	                    	  var text = '&#8377; '+params.data.amount;
 	                    	  return text;
 	                      }, cellStyle: function(params) {
@@ -59,16 +60,18 @@
 	                        	  return {'color': 'darkred'};
 	                          }
 	                      }},
-	                      {headerName: "Actions", field: "id", width: 120, cellRenderer: function(params) {
+	                      {headerName: "Actions", field: "id", width: 150, cellRenderer: function(params) {
 	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View</a>';
 	                    	  if (AuthenticationService.isAdmin() == "true") {
 	                    		  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
 	                    		  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
+	                    		  var d = '<a ng-click="bm.showMarkPaidBillDlg('+params.data.id+');"><b>Mark Paid</b></a>';
 	                    	  } else {
 	                    		  var b = '';
 	                    		  var c = '';
+	                    		  var d = '';
 	                    	  }
-	                    	  return a+'&nbsp;&nbsp;'+b+'&nbsp;&nbsp;'+c;
+	                    	  return a+'&nbsp;&nbsp;'+b+'&nbsp;&nbsp;'+c+'&nbsp;&nbsp;'+d;
 	                      }}
 	                  ];
 	    $scope.gridOptions = {
@@ -129,6 +132,22 @@
         	});
 	        addDlg.closePromise.then(function (data) {
 	        	getBillsList(); 
+	        });
+        }
+        
+        function showMarkPaidBillDlg(billId) {
+        	$scope.billId = billId;
+        	var dlg = ngDialog.open({
+        	    template: 'pages/markPaid.html',
+        	    controller: 'MarkPaidBillController',
+        	    controllerAs: 'pbcm',
+        	    closeByEscape:true,
+        	    className: 'ngdialog-theme-default dialogwidth800',
+        	    cache:false,
+        	    scope:$scope
+        	});
+        	dlg.closePromise.then(function (data) {
+        		getBillsList(); 
 	        });
         }
         

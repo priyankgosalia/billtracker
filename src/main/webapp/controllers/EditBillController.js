@@ -80,7 +80,7 @@
         	var billType = $('#billType').val();
         	var dueDate = $('#dueDt').val();
         	var recurrence = $('#recurrence').val();
-        	var reminder = serv.remindersetting;
+        	var reminder = cm.remindersetting;
         	var reminderSetting = 0;
         	if (reminder=="days") {
         		var reminderSetting = $('#reminderDaysPicker').val();
@@ -112,23 +112,22 @@
         	}
         	var userId = AuthenticationService.GetUserId()
         	// time to persist the data
-        	serv.dataLoading = true;
-        	console.log(recurrence);
-        	BillService.addBill(companyId,billType,dueDate,serv.location,serv.amount,serv.description,serv.paymentMode,userId,recurrence,reminderSetting,function(response){
+        	cm.dataLoading = true;
+        	BillService.updateBill(cm.billId,companyId,billType,dueDate,cm.location,cm.amount,cm.description,cm.paymentMode,userId,recurrence,reminderSetting,function(response){
         		console.log(response);
         		var result = response.result;
-        		serv.dataLoading = false;
+        		cm.dataLoading = false;
         		if (response.result == false) {
-        			serv.addBillFailure = true;
-        			serv.addBillFailureMessage = response.message;
+        			cm.editBillFailure = true;
+        			cm.editBillFailureMessage = response.message;
         		} else {
-        			serv.addBillFailure = false;
-        			serv.addBillFailureMessage = null;
-        			serv.addBillSuccess = true;
-        			serv.addBillSuccessMessage = response.message;
-        			serv.addBillId = response.billId;
-        			$scope.closeThisDialog(serv.addBillId);
-        			alert("Bill added successfully. Bill ID is "+serv.addBillId);
+        			cm.editBillFailure = false;
+        			cm.editBillFailureMessage = null;
+        			cm.editBillSuccess = true;
+        			cm.editBillSuccessMessage = response.message;
+        			cm.editBillId = response.billId;
+        			$scope.closeThisDialog('');
+        			alert("Bill details updated successfully.");
         		}
         	});
         }
@@ -140,6 +139,7 @@
                     $scope.billInfo = response.data;
                     $timeout(function(){
                     	// set data in the ng-models
+                    	cm.billId = $scope.billInfo.id;
                     	cm.location = $scope.billInfo.location;
                     	cm.amount = $scope.billInfo.amount;
                     	cm.paymentMode = $scope.billInfo.paymentMode;
@@ -147,7 +147,13 @@
                     	cm.billType = $scope.billInfo.frequency;
                     	cm.company = $scope.billInfo.company;
                     	cm.recurrence = $scope.billInfo.recurring;
+                    	$scope.recur = cm.recurrence;
                     	cm.reminderDays = $scope.billInfo.reminderDays;
+                    	if (cm.reminderDays>0) {
+                    		cm.remindersetting = "days";
+                    	} else {
+                    		cm.remindersetting = "always";
+                    	}
                     	
                     	if (cm.reminderDays!=null && cm.reminderDays>0) {
                     		$('#remNumber').prop("checked", true);
@@ -159,6 +165,8 @@
                     	$('#recurcheckbox').prop("checked", cm.recurrence);
 	    	        	$('#recurrence').val(cm.recurrence);
                     	$('select[name=companylist]').val(cm.company);
+                    	$('#companyId').val(cm.company);
+                    	$('#billType').val(cm.billType);
                     	$('select[name=billfreq]').val(cm.billType);
                     	$('.selectpicker').selectpicker('refresh');
                     	$('#recurrence').val(cm.recurrence);

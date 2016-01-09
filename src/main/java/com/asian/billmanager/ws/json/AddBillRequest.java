@@ -3,10 +3,13 @@ package com.asian.billmanager.ws.json;
 /*
  * AddBillRequest
  * 
+ * JSON object used for both Add and Edit bill functionality.
+ * 
  * Created: 01-JAN-2016
  * Author:  Priyank Gosalia <priyankmg@gmail.com>
  */
 public class AddBillRequest {
+	int billId;
 	char billType;
 	int companyId;
 	String dueDate;
@@ -24,6 +27,8 @@ public class AddBillRequest {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AddBillRequest [billType=");
 		builder.append(billType);
+		builder.append(", billId=");
+		builder.append(billId);
 		builder.append(", companyId=");
 		builder.append(companyId);
 		builder.append(", dueDate=");
@@ -53,6 +58,12 @@ public class AddBillRequest {
 	}
 	public void setBillType(char billType) {
 		this.billType = billType;
+	}
+	public int getBillId() {
+		return billId;
+	}
+	public void setBillId(int billId) {
+		this.billId = billId;
 	}
 	public int getCompanyId() {
 		return companyId;

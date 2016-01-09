@@ -70,6 +70,12 @@ public class BillDAO extends SuperDAO {
 														"and b.master_bill_id = bm.id and b.deleted = 0 and b.paid = 0 and bm.company_id = c.id and r.bill_id = b.id "+
 														"and r.master_reminder_id = rm.id order by days_remaining;";
 	private static final String MARK_AS_PAID_BILL_QUERY = "update btrack.bill set paid = 1, payment_date = CURRENT_TIMESTAMP where id=:billId";
+	private static final String UPDATE_BILL_INSTANCE_QUERY = "update btrack.bill set amount=:amount,description=:desc,payment_mode=:payment_mode,due_date=:due_date,"+
+															"freq_id=(select id from btrack.bill_freq where code=:freq_type) where id=:bill_id";
+	private static final String UPDATE_BILL_MASTER_QUERY = "update btrack.bill_master set amount=:amount,description=:desc,payment_mode=:payment_mode,due_date=:due_date,company_id=:company_id,"+
+															"auto_recur=:auto_recur,due_day=:due_day,location=:location,freq_id=(select id from btrack.bill_freq where code=:freq_type) where id=(select master_bill_id "+
+															"from btrack.bill where id=:bill_id)";
+
 	
 	public BillDAO(NamedParameterJdbcTemplate template, SimpleJdbcTemplate stemplate) {
 		this.jdbcTemplate = template;
@@ -247,6 +253,37 @@ public class BillDAO extends SuperDAO {
 			jdbcTemplate.update(NEW_REMINDER_INSTANCE_QUERY, paramMap);
 			logger.info("Inserting an entry into REMINDER - End");
 			return lastBillInstanceId;
+		} catch (DataAccessException dex) {
+			logger.error("Error inserting entry into one of the bill tables: "+dex.getMessage());
+			throw new Exception (dex.getMessage());
+		}
+	}
+	
+	@Transactional(rollbackFor={Exception.class,DataAccessException.class})
+	public int updateBill(int billId, int companyId, String location, char freqType, Double amount,
+						String paymentMode, int userId, String desc, int dueDay,
+						Date dueDate, int autoRecur, int paid, int reminderDays) throws Exception {
+		try {
+			// Step 1 - Update BILL table
+			Map<String, Object> paramMap = new HashMap<String,Object>();
+			paramMap.put("bill_id", billId);
+			paramMap.put("company_id",companyId);
+			paramMap.put("location",location);
+			paramMap.put("freq_type",""+freqType);
+			paramMap.put("amount",amount);
+			paramMap.put("payment_mode",paymentMode);
+			paramMap.put("user_id",userId);
+			paramMap.put("desc",desc);
+			paramMap.put("due_day",dueDay);
+			paramMap.put("due_date",dueDate);
+			paramMap.put("auto_recur",autoRecur);
+			logger.info("Update table BILL for billId "+billId+" - Start");
+			jdbcTemplate.update(UPDATE_BILL_INSTANCE_QUERY, paramMap);
+			logger.info("Update table BILL for billId "+billId+" - End");
+			logger.info("Update table BILL_MASTER for billId "+billId+" - Start");
+			jdbcTemplate.update(UPDATE_BILL_MASTER_QUERY, paramMap);
+			logger.info("Update table BILL_MASTER for billId "+billId+" - End");
+			return 0;
 		} catch (DataAccessException dex) {
 			logger.error("Error inserting entry into one of the bill tables: "+dex.getMessage());
 			throw new Exception (dex.getMessage());

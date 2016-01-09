@@ -11,6 +11,7 @@
         cmservice.getAllBills = getAllBills;
         cmservice.getAllReminders = getAllReminders;
         cmservice.addBill = addBill;
+        cmservice.updateBill = updateBill;
         cmservice.deleteBill = deleteBill;
         cmservice.getBillInfo = getBillInfo;
         cmservice.markPaid = markPaid;
@@ -79,6 +80,26 @@
         
         function addBill(companyId,billType,dueDate,location,amount,desc,paymentMode,userId,recurrence,reminder,callback) {
             $http.post('ws/bill/addBill', { companyId: companyId, 
+            								billType: billType,
+            								dueDate: dueDate,
+            								amount: amount,
+            								location:location,
+            								description:desc,
+            								paymentMode:paymentMode,
+            								userId:userId,
+            								paid:0,
+            								recurrence:recurrence,
+            								reminderDays:reminder})
+                .success(function (response) {
+                	console.log(response);
+                    callback(response);
+                });
+        }
+        
+        function updateBill(billId,companyId,billType,dueDate,location,amount,desc,paymentMode,userId,recurrence,reminder,callback) {
+            $http.post('ws/bill/updateBill', { 
+            								billId : billId,
+            								companyId: companyId, 
             								billType: billType,
             								dueDate: dueDate,
             								amount: amount,

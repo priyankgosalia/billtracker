@@ -165,6 +165,38 @@ public class BillService extends Service {
 		}
 	}
 	
+	@POST
+	@Path("updateBill")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public AddBillResponse updateBill(AddBillRequest request,
+									@Context HttpServletRequest req) throws JSONException {
+		logger.info("Updating details of bill "+request);
+		try {
+			final Date dueDate = df.parse(request.getDueDate());
+			final int userId = Integer.parseInt(request.getUserId());
+			final int billId = billDAO.updateBill(request.getBillId(),
+							request.getCompanyId(),
+							request.getLocation(),
+							request.getBillType(),
+							request.getAmount(),
+							request.getPaymentMode(),
+							userId,
+							request.getDescription(),
+							dueDate.getDate(),
+							new java.sql.Date(dueDate.getTime()),
+							(request.isRecurrence())?1:0,
+							request.getPaid(),
+							request.getReminderDays());
+			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill added successfully.",billId);
+		} catch(ParseException ex) {
+			logger.error("Failed to add bill due to an error while parsing due date. "+ex.getMessage());
+			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. The format of Due Date is incorrect.");
+		} catch(Exception ex) {
+			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. Error: "+ex.getMessage());
+		}
+	}
+	
 	@GET
 	@Path("markPaid")
 	@Produces(MediaType.APPLICATION_JSON)
