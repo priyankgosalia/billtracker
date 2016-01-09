@@ -8,6 +8,6 @@ package com.asian.billmanager.version;
  */
 public final class Version {
 	public static String APPNAME	= "BillTracker";
-    public static String VERSION 	= "0.0.1";
-    public static String BUILDTIME 	= "2016-01-02T10:20:00Z";
+    public static String VERSION 	= "1.0.0";
+    public static String BUILDTIME 	= "2016-01-09T09:37:33Z";
 }
