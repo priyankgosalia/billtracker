@@ -48,16 +48,19 @@
 				<b>Quick Filters :</b>
 			</span>
 			<span class="input-group-addon">
-				<input type="radio" name="billStatus" value="All" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="All Bills">&nbsp; All Bills</input>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="billStatus" value="All" ng-model="billStatus" ng-click="anyOtherBillClicked()" ng-change="externalFilterChanged()" aria-label="All Bills">&nbsp; All Bills</input>&nbsp;&nbsp;&nbsp;
 			</span>
 			<span class="input-group-addon">
-				<input type="radio" name="billStatus" value="Paid" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Paid">&nbsp; Paid</input>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="billStatus" value="Paid" ng-model="billStatus" ng-click="anyOtherBillClicked()" ng-change="externalFilterChanged()" aria-label="Paid">&nbsp; Paid</input>&nbsp;&nbsp;&nbsp;
 			</span>
 			<span class="input-group-addon">
-				<input type="radio" name="billStatus" value="Unpaid" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Unpaid">&nbsp; Unpaid</input>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="billStatus" value="Unpaid" ng-model="billStatus" ng-click="anyOtherBillClicked()" ng-change="externalFilterChanged()" aria-label="Unpaid">&nbsp; Unpaid</input>&nbsp;&nbsp;&nbsp;
 			</span>
 			<span class="input-group-addon">
-				<input type="radio" name="billStatus" value="DueThisMonth" ng-model="billStatus" ng-change="externalFilterChanged()" aria-label="Due This Month">&nbsp; Due this month</input>
+				<input type="radio" name="billStatus" value="Deleted" ng-model="billStatus" ng-click="deletedBillsClicked()" ng-change="externalFilterChanged()" aria-label="Deleted">&nbsp; Deleted</input>&nbsp;&nbsp;&nbsp;
+			</span>
+			<span class="input-group-addon">
+				<input type="radio" name="billStatus" value="DueThisMonth" ng-model="billStatus" ng-click="deletedBillsClicked()" ng-change="externalFilterChanged()" aria-label="Due This Month">&nbsp; Due this month</input>
 			</span>
 		</div>
 		

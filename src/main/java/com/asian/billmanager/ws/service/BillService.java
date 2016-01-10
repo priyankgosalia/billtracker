@@ -71,6 +71,23 @@ public class BillService extends Service {
 	}
 	
 	@GET
+	@Path("getAllDeletedBills")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Bill> getAllDeletedBills(@Context HttpServletRequest request) throws JSONException {
+		logger.info("Retrieving all bills from database");
+		final List<Bill> list = new LinkedList<Bill>();
+		List<BillBO> billListFromDB = billDAO.getAllDeletedBills();
+		if (billListFromDB!=null && billListFromDB.size()>0) {
+			for (BillBO b:billListFromDB) {
+				Bill bx = populateBillInfoObject(b);
+				list.add(bx);
+			}
+		}
+		logger.info("Retrieved "+list.size()+" bills from the database.");
+		return list;
+	}
+	
+	@GET
 	@Path("getAllReminders")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Reminder> getAllReminders(@Context HttpServletRequest request) throws JSONException {

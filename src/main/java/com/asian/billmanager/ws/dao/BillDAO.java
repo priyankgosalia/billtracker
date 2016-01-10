@@ -34,6 +34,11 @@ public class BillDAO extends SuperDAO {
 												"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c left outer join btrack.reminder_master rm on master_bill_id = rm.master_bill_id "+
 												"where b.master_bill_id = bm.id and b.freq_id = bf.id and bm.user_id = u.id and b.deleted = 0 "+
 												"and bm.company_id = c.id and rm.master_bill_id = bm.id order by b.id desc";
+	private static final String ALL_BILLS_DELETED_QUERY = "select b.id,bm.id master_bill_id,c.name company,b.amount,u.firstName addedby,bf.description frequency, b.auto_generated,"+
+			"bm.payment_mode, bm.location, bm.description bill_desc, b.paid, b.deleted, bm.due_day, b.due_date, b.creation_date, bm.auto_recur, rm.before_days "+
+			"from btrack.bill_master bm, bill b, bill_freq bf, users u, company c left outer join btrack.reminder_master rm on master_bill_id = rm.master_bill_id "+
+			"where b.master_bill_id = bm.id and b.freq_id = bf.id and bm.user_id = u.id and b.deleted = 1 "+
+			"and bm.company_id = c.id and rm.master_bill_id = bm.id order by b.id desc";
 	private static final String NEW_BILL_MASTER_QUERY = "insert into bill_master(company_id,location,freq_id,amount,"+
 														"payment_mode,user_id,description,due_day,due_date,auto_recur) values ("+
 														":company_id,:location,(select id from btrack.bill_freq where code=:freq_type),:amount,:payment_mode,:user_id,"+
@@ -84,6 +89,10 @@ public class BillDAO extends SuperDAO {
 	
 	public List<BillBO> getAllBills() {
 		return jdbcTemplate.query(ALL_BILLS_QUERY, new AllBillsExtractor());
+	}
+	
+	public List<BillBO> getAllDeletedBills() {
+		return jdbcTemplate.query(ALL_BILLS_DELETED_QUERY, new AllBillsExtractor());
 	}
 	
 	public List<ReminderBO> getAllReminders() {

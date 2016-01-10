@@ -24,30 +24,31 @@
         return cm;
         
         function deleteBill() {
-        	var billId = $('#billId').val();
-        	var deleteOption = cm.deleteOption;
-        	var deleteRecur = false;
-        	if (deleteOption == "thisandrecur") {
-        		deleteRecur = true;
+        	if (confirm("Are you sure you want to delete this Bill ?")) {
+        		var billId = $('#billId').val();
+            	var deleteOption = cm.deleteOption;
+            	var deleteRecur = false;
+            	if (deleteOption == "thisandrecur") {
+            		deleteRecur = true;
+            	}
+            	cm.dataLoading = true;
+            	BillService.deleteBill(billId,deleteRecur,function(response){
+            		console.log(response);
+            		var result = response.result;
+            		cm.dataLoading = false;
+            		if (response.result == false) {
+            			cm.deleteBillFailure = true;
+            			cm.deleteBillFailureMessage = response.message;
+            		} else {
+            			cm.deleteBillFailure = false;
+            			cm.deleteBillFailureMessage = null;
+            			cm.deleteBillSuccess = true;
+            			cm.deleteBillSuccessMessage = response.message;
+            			$scope.closeThisDialog('v');
+            			alert("Bill deleted successfully");
+            		}
+            	});
         	}
-        	
-        	cm.dataLoading = true;
-        	BillService.deleteBill(billId,deleteRecur,function(response){
-        		console.log(response);
-        		var result = response.result;
-        		cm.dataLoading = false;
-        		if (response.result == false) {
-        			cm.deleteBillFailure = true;
-        			cm.deleteBillFailureMessage = response.message;
-        		} else {
-        			cm.deleteBillFailure = false;
-        			cm.deleteBillFailureMessage = null;
-        			cm.deleteBillSuccess = true;
-        			cm.deleteBillSuccessMessage = response.message;
-        			$scope.closeThisDialog('v');
-        			alert("Bill deleted successfully");
-        		}
-        	});
         }
 
         function getBillInfo(billId) {

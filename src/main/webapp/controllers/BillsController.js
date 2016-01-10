@@ -11,6 +11,7 @@
     function BillsController($location, $scope, BillService, AuthenticationService, CompanyService, $window, ngDialog) {
 	   	var serv = {};
 	   	serv.getBillsList = getBillsList;
+	   	serv.getDeletedBillsList = getDeletedBillsList;
 	   	serv.showAddBillDialog = showAddBillDialog;
 	   	serv.showViewBillDialog = showViewBillDialog;
 	   	serv.showEditBillDialog = showEditBillDialog;
@@ -95,14 +96,27 @@
 	        switch ($scope.billStatus) {
 	            case 'Paid': return node.data.status == "Paid";
 	            case 'Unpaid': return node.data.status == "Unpaid";
+	            case 'Deleted':
+	            	return (node.data.deleted == true);
 	            case 'DueThisMonth': 
 	            	var currentDate = new Date();
-	            	var dueDate = node.data.dueDate;
-	            	var pattern = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1);
-	            	return node.data.status == "Unpaid" && dueDate.indexOf(pattern)!=-1;
+	            	var dueDate = node.data.dueDate
+	            	var dueDateDate = new Date(dueDate); 
+	            	console.log(node.data);
+	            	console.log((dueDateDate.getMonth()+1)+","+(currentDate.getMonth()+1));
+	            	console.log((dueDateDate.getFullYear())+","+(currentDate.getFullYear()));
+	            	return ((dueDateDate.getMonth()+1)==(currentDate.getMonth()+1) && dueDateDate.getFullYear() == currentDate.getFullYear()) && node.data.status == "Unpaid" && (node.data.deleted == false);
 	            case 'All': return true;
 	            default: return true;
 	        }
+	    }
+	    
+	    $scope.deletedBillsClicked = function () {
+	    	serv.getDeletedBillsList();
+	    };
+	    
+	    $scope.anyOtherBillClicked = function () {
+	    	$scope.gridOptions.api.setRowData($scope.billsList);
 	    }
 	    
 	    $scope.externalFilterChanged = function () {
@@ -126,6 +140,7 @@
         	    controller: 'AddBillController',
         	    controllerAs: 'abcm',
         	    closeByEscape:true,
+        	    closeByDocument:false,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
@@ -142,6 +157,7 @@
         	    controller: 'MarkPaidBillController',
         	    controllerAs: 'pbcm',
         	    closeByEscape:true,
+        	    closeByDocument:false,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
@@ -158,6 +174,7 @@
         	    controller: 'ViewBillController',
         	    controllerAs: 'vbcm',
         	    closeByEscape:true,
+        	    closeByDocument:false,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
@@ -171,6 +188,7 @@
         	    controller: 'DeleteBillController',
         	    controllerAs: 'dbcm',
         	    closeByEscape:true,
+        	    closeByDocument:false,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
@@ -187,6 +205,7 @@
         	    controller: 'EditBillController',
         	    controllerAs: 'ebcm',
         	    closeByEscape:true,
+        	    closeByDocument:false,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
@@ -203,6 +222,17 @@
                     $scope.gridOptions.api.setRowData($scope.billsList);
                 } else {
                 	$scope.billsList = null;
+                }
+            });
+        }
+        
+        function getDeletedBillsList() {
+        	BillService.getAllDeletedBills(function (response) {
+                if (response) {
+                    $scope.deletedBillsList = response.data;
+                    $scope.gridOptions.api.setRowData($scope.deletedBillsList);
+                } else {
+                	$scope.deletedBillsList = null;
                 }
             });
         }

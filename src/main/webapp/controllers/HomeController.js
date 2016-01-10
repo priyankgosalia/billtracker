@@ -107,6 +107,7 @@
         	    controller: 'ViewBillController',
         	    controllerAs: 'vbcm',
         	    closeByEscape:true,
+        	    closeByDocument:false,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
@@ -120,6 +121,7 @@
         	    controller: 'MarkPaidBillController',
         	    controllerAs: 'pbcm',
         	    closeByEscape:true,
+        	    closeByDocument:false,
         	    className: 'ngdialog-theme-default dialogwidth800',
         	    cache:false,
         	    scope:$scope
