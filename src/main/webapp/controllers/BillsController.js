@@ -102,17 +102,24 @@
 	            	var currentDate = new Date();
 	            	var dueDate = node.data.dueDate
 	            	var dueDateDate = new Date(dueDate); 
-	            	console.log(node.data);
+	            	//console.log(node.data);
 	            	console.log((dueDateDate.getMonth()+1)+","+(currentDate.getMonth()+1));
 	            	console.log((dueDateDate.getFullYear())+","+(currentDate.getFullYear()));
-	            	return ((dueDateDate.getMonth()+1)==(currentDate.getMonth()+1) && dueDateDate.getFullYear() == currentDate.getFullYear()) && node.data.status == "Unpaid" && (node.data.deleted == false);
+	            	var val1 = (dueDateDate.getMonth() == currentDate.getMonth() && dueDateDate.getFullYear() == currentDate.getFullYear());
+	            	var val2 = node.data.status;
+	            	var val3 = node.data.deleted;
+	            	if (val1 == true && val2 == "Unpaid" && val3 == true) {
+		            	return true;
+	        		} else {
+	        			return false;
+	        		}
 	            case 'All': return true;
 	            default: return true;
 	        }
 	    }
 	    
 	    $scope.deletedBillsClicked = function () {
-	    	serv.getDeletedBillsList();
+	    	$scope.gridOptions.api.setRowData($scope.deletedBillsList);
 	    };
 	    
 	    $scope.anyOtherBillClicked = function () {
@@ -125,6 +132,7 @@
 	    };
 	    
 	    getBillsList();
+	    getDeletedBillsList();
 	    
 	    angular.element(document).ready(function () {
 	    	$scope.gridOptions.api.sizeColumnsToFit();
