@@ -41,6 +41,13 @@
                 controllerAs: 'bm'
             })
             
+            .when('/prefs', {
+            	title: 'Preferences',
+                controller: 'PrefsController',
+                templateUrl: 'pages/prefs.html',
+                controllerAs: 'pm'
+            })
+            
             .when('/about', {
             	title: 'About',
             	controller: 'AboutController',

@@ -16,6 +16,8 @@ import com.asian.billmanager.ws.bo.UserBO;
  */
 public class UserDAO extends SuperDAO {
 	private static final String USER_BY_USERNAME_QUERY = "SELECT id,username,password,firstname,lastname,enabled,is_admin from btrack.users where username=:username";
+	private static final String UPDATE_USER_DETAIL_QUERY = "UPDATE btrack.users set firstname=:firstname,lastname=:lastname where username=:username";
+	private static final String UPDATE_USER_PASSWORD_QUERY = "UPDATE btrack.users set password=:password where username=:username";
 	
 	private NamedParameterJdbcTemplate jdbcTemplate = null;
 	
@@ -27,6 +29,21 @@ public class UserDAO extends SuperDAO {
 		Map<String, Object> paramMap = new HashMap<String,Object>();
 		paramMap.put("username",username);
 		return jdbcTemplate.query(USER_BY_USERNAME_QUERY, paramMap, new UserExtractor());
+	}
+	
+	public int updateUserNameDetails(String username, String firstName, String lastName) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String,Object>();
+		paramMap.put("username",username);
+		paramMap.put("firstname",firstName);
+		paramMap.put("lastname",lastName);
+		return jdbcTemplate.update(UPDATE_USER_DETAIL_QUERY, paramMap);
+	}
+	
+	public int updateUserPassword(String username, String md5Password) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String,Object>();
+		paramMap.put("username",username);
+		paramMap.put("password",md5Password);
+		return jdbcTemplate.update(UPDATE_USER_PASSWORD_QUERY, paramMap);
 	}
 	
 	static class UserExtractor implements ResultSetExtractor<UserBO> {
@@ -47,5 +64,4 @@ public class UserDAO extends SuperDAO {
 			return null;
 		}
 	}
-	
 }

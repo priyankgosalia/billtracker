@@ -105,6 +105,12 @@
 		</constructor-arg>
 	</bean>
 	
+	<bean id="prefsService" class="com.asian.billmanager.ws.service.PrefsService">
+		<constructor-arg>
+			<ref bean="userDao" />
+		</constructor-arg>
+	</bean>
+	
 	<bean id="appContext" class="com.asian.billmanager.ws.context.ApplicationContextProvider"></bean>
 	
 	<!-- Start of Auto Bill Generator Job configuration section -->

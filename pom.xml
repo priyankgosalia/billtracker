@@ -4,7 +4,7 @@
 	<groupId>com.asian</groupId>
 	<artifactId>billmanager</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>Asian Infotel Bill Management WebApp</name>
 	<description>Bill Tracking and Management application developed exclusively for Asian Infotel.</description>
 	<url>http://asian-associates.com/</url>
@@ -27,6 +27,7 @@
 			<id>2</id>
 			<roles>
 				<role>Concept</role>
+				<role>Tester</role>
 			</roles>
 			<name>Nikita Nagarkar</name>
 			<email>niki2804@gmail.com</email>
@@ -38,6 +39,7 @@
 	    <ver.class.name>Version</ver.class.name>
 	    <ver.appversion>${project.version}</ver.appversion>
 	    <ver.buildtime>${maven.build.timestamp}</ver.buildtime>
+	    <maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
 	    <ver.template.dir>src/main/resources/version</ver.template.dir>
 	    <ver.template.file>VersionJava.template</ver.template.file>
 	</properties>
