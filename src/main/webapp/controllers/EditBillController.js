@@ -114,10 +114,10 @@
         	// time to persist the data
         	cm.dataLoading = true;
         	BillService.updateBill(cm.billId,companyId,billType,dueDate,cm.location,cm.amount,cm.description,cm.paymentMode,userId,recurrence,reminderSetting,function(response){
-        		console.log(response);
         		var result = response.result;
         		cm.dataLoading = false;
         		if (response.result == false) {
+        			console.log("Hrraa = "+response);
         			cm.editBillFailure = true;
         			cm.editBillFailureMessage = response.message;
         		} else {

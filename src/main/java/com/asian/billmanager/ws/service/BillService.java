@@ -207,10 +207,10 @@ public class BillService extends Service {
 							request.getReminderDays());
 			return AddBillResponse.getSuccessResponseWithMessageAndBillId("Bill added successfully.",billId);
 		} catch(ParseException ex) {
-			logger.error("Failed to add bill due to an error while parsing due date. "+ex.getMessage());
-			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. The format of Due Date is incorrect.");
+			logger.error("Failed to save changes due to an error while parsing due date. "+ex.getMessage());
+			return AddBillResponse.getFailureResponseWithMessage("Failed to save changes to Bill. The format of Due Date is incorrect.");
 		} catch(Exception ex) {
-			return AddBillResponse.getFailureResponseWithMessage("Failed to add Bill. Error: "+ex.getMessage());
+			return AddBillResponse.getFailureResponseWithMessage("Failed to save changes to Bill. Error: "+ex.getMessage());
 		}
 	}
 	

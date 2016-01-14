@@ -9,7 +9,7 @@
 		<div ng-if="ebcm.dataLoading">
 			<i class="fa fa-spinner fa-pulse"></i> <h4>Please wait...</h4>
 		</div>
-		<div ng-if="ebcm.addBillFailure">
+		<div ng-if="ebcm.editBillFailure">
 			<div class="alert alert-danger" role="alert"><i class="fa fa-2x fa-exclamation-triangle"></i>&nbsp;{{ebcm.editBillFailureMessage}}</div>
 		</div>
 		<div ng-if="ebcm.recurrence" class="well">
@@ -48,7 +48,7 @@
 				</div> &nbsp;&nbsp;&nbsp;
 				<div class="input-group input-group-sm">
 						<div class="input-group-addon"><i class="fa fa-briefcase"></i></div>
-						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" ng-model="ebcm.company" required />
+						<input type="text" name="company" id="company" class="form-control" placeholder="New Company" required />
 				</div>&nbsp;&nbsp;
 				<button type="submit" ng-disabled="form.$invalid" class="btn btn-default"><i class="fa fa-plus-square"></i> &nbsp;Add&nbsp;</button>
 				<span ng-show="form.company.$dirty && form.company.$error.required" class="help-block">Company name is mandatory</span>

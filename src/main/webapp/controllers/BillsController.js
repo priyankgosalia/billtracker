@@ -64,9 +64,15 @@
 	                      {headerName: "Actions", field: "id", width: 150, cellRenderer: function(params) {
 	                    	  var a = '<a ng-click="bm.showViewBillDialog('+params.data.id+');">View</a>';
 	                    	  if (AuthenticationService.isAdmin() == "true") {
-	                    		  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
-	                    		  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
-	                    		  var d = '<a ng-click="bm.showMarkPaidBillDlg('+params.data.id+');"><b>Mark Paid</b></a>';
+	                    		  if ($scope.deletedBillsRadioActive==false) {
+		                    		  var b = '<a ng-click="bm.showEditBillDialog('+params.data.id+');">Edit</a>';
+		                    		  var c = '<a ng-click="bm.showDeleteBillDialog('+params.data.id+');">Delete</a>';
+		                    		  var d = '<a ng-click="bm.showMarkPaidBillDlg('+params.data.id+');"><b>Mark Paid</b></a>';
+	                    		  } else {
+	                    			  var b = '';
+		                    		  var c = '';
+		                    		  var d = '';
+	                    		  }
 	                    	  } else {
 	                    		  var b = '';
 	                    		  var c = '';
@@ -108,7 +114,7 @@
 	            	var val1 = (dueDateDate.getMonth() == currentDate.getMonth() && dueDateDate.getFullYear() == currentDate.getFullYear());
 	            	var val2 = node.data.status;
 	            	var val3 = node.data.deleted;
-	            	if (val1 == true && val2 == "Unpaid" && val3 == true) {
+	            	if (val1 == true && val2 == "Unpaid" && val3 == false) {
 		            	return true;
 	        		} else {
 	        			return false;
@@ -119,11 +125,17 @@
 	    }
 	    
 	    $scope.deletedBillsClicked = function () {
-	    	$scope.gridOptions.api.setRowData($scope.deletedBillsList);
+	    	$scope.deletedBillsRadioActive = true;
+	    	getDeletedBillsListWithCallback(function(response){
+	    		$scope.gridOptions.api.setRowData($scope.deletedBillsList);
+		    });
 	    };
 	    
 	    $scope.anyOtherBillClicked = function () {
-	    	$scope.gridOptions.api.setRowData($scope.billsList);
+	    	$scope.deletedBillsRadioActive = false;
+	    	getBillsListWithCallback(function(response){
+		    	$scope.gridOptions.api.setRowData($scope.billsList);
+		    });
 	    }
 	    
 	    $scope.externalFilterChanged = function () {
@@ -131,8 +143,11 @@
 	        $scope.gridOptions.api.onFilterChanged();
 	    };
 	    
-	    getBillsList();
-	    getDeletedBillsList();
+	    getBillsListWithCallback(function(response){
+	    	$scope.gridOptions.api.setRowData($scope.billsList);
+	    });
+	    
+	    $scope.deletedBillsRadioActive=false;
 	    
 	    angular.element(document).ready(function () {
 	    	$scope.gridOptions.api.sizeColumnsToFit();
@@ -227,10 +242,22 @@
         	BillService.getAllBills(function (response) {
                 if (response) {
                     $scope.billsList = response.data;
-                    $scope.gridOptions.api.setRowData($scope.billsList);
+                    //$scope.gridOptions.api.setRowData($scope.billsList);
                 } else {
                 	$scope.billsList = null;
                 }
+            });
+        }
+        
+        function getBillsListWithCallback(cb) {
+        	BillService.getAllBills(function (response) {
+                if (response) {
+                    $scope.billsList = response.data;
+                    //$scope.gridOptions.api.setRowData($scope.billsList);
+                } else {
+                	$scope.billsList = null;
+                }
+                cb($scope.billsList);
             });
         }
         
@@ -238,10 +265,22 @@
         	BillService.getAllDeletedBills(function (response) {
                 if (response) {
                     $scope.deletedBillsList = response.data;
-                    $scope.gridOptions.api.setRowData($scope.deletedBillsList);
+                    //$scope.gridOptions.api.setRowData($scope.deletedBillsList);
                 } else {
                 	$scope.deletedBillsList = null;
                 }
+            });
+        }
+        
+        function getDeletedBillsListWithCallback(cb) {
+        	BillService.getAllDeletedBills(function (response) {
+                if (response) {
+                    $scope.deletedBillsList = response.data;
+                    //$scope.gridOptions.api.setRowData($scope.deletedBillsList);
+                } else {
+                	$scope.deletedBillsList = null;
+                }
+                cb($scope.deletedBillsList);
             });
         }
         

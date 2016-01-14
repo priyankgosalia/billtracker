@@ -80,6 +80,8 @@ public class BillDAO extends SuperDAO {
 	private static final String UPDATE_BILL_MASTER_QUERY = "update btrack.bill_master set amount=:amount,description=:desc,payment_mode=:payment_mode,due_date=:due_date,company_id=:company_id,"+
 															"auto_recur=:auto_recur,due_day=:due_day,location=:location,freq_id=(select id from btrack.bill_freq where code=:freq_type) where id=(select master_bill_id "+
 															"from btrack.bill where id=:bill_id)";
+	private static final String UPDATE_REMINDER_INSTANCE_QUERY = "update btrack.reminder set before_days=:reminder_days where bill_id=:bill_id";
+	private static final String UPDATE_REMINDER_MASTER_QUERY = "update btrack.reminder_master set before_days=:reminder_days where master_bill_id=(select master_bill_id from btrack.bill where id=:bill_id)";
 
 	
 	public BillDAO(NamedParameterJdbcTemplate template, SimpleJdbcTemplate stemplate) {
@@ -286,12 +288,19 @@ public class BillDAO extends SuperDAO {
 			paramMap.put("due_day",dueDay);
 			paramMap.put("due_date",dueDate);
 			paramMap.put("auto_recur",autoRecur);
+			paramMap.put("reminder_days", reminderDays);
 			logger.info("Update table BILL for billId "+billId+" - Start");
 			jdbcTemplate.update(UPDATE_BILL_INSTANCE_QUERY, paramMap);
 			logger.info("Update table BILL for billId "+billId+" - End");
 			logger.info("Update table BILL_MASTER for billId "+billId+" - Start");
 			jdbcTemplate.update(UPDATE_BILL_MASTER_QUERY, paramMap);
 			logger.info("Update table BILL_MASTER for billId "+billId+" - End");
+			logger.info("Update table REMINDER for billId "+billId+" - Start");
+			jdbcTemplate.update(UPDATE_REMINDER_INSTANCE_QUERY, paramMap);
+			logger.info("Update table REMINDER for billId "+billId+" - End");
+			logger.info("Update table REMINDER_MASTER for billId "+billId+" - Start");
+			jdbcTemplate.update(UPDATE_REMINDER_MASTER_QUERY, paramMap);
+			logger.info("Update table REMINDER_MASTER for billId "+billId+" - End");
 			return 0;
 		} catch (DataAccessException dex) {
 			logger.error("Error inserting entry into one of the bill tables: "+dex.getMessage());
