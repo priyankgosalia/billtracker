@@ -169,7 +169,9 @@
         	    scope:$scope
         	});
 	        addDlg.closePromise.then(function (data) {
-	        	getBillsList(); 
+	        	getBillsListWithCallback(function(response){
+	    	    	$scope.gridOptions.api.setRowData($scope.billsList);
+	    	    });
 	        });
         }
         
@@ -186,7 +188,9 @@
         	    scope:$scope
         	});
         	dlg.closePromise.then(function (data) {
-        		getBillsList(); 
+        		getBillsListWithCallback(function(response){
+        	    	$scope.gridOptions.api.setRowData($scope.billsList);
+        	    });
 	        });
         }
         
@@ -217,7 +221,9 @@
         	    scope:$scope
         	});
         	delDlg.closePromise.then(function (data) {
-	        	getBillsList(); 
+        		getBillsListWithCallback(function(response){
+        	    	$scope.gridOptions.api.setRowData($scope.billsList);
+        	    }); 
 	        });
         }
         
@@ -234,7 +240,9 @@
         	    scope:$scope
         	});
         	editDlg.closePromise.then(function (data) {
-        		getBillsList(); 
+        		getBillsListWithCallback(function(response){
+        	    	$scope.gridOptions.api.setRowData($scope.billsList);
+        	    });
         	});
         }
         
