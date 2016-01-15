@@ -28,6 +28,8 @@
                 	cmp.lastName = response.data.lastName;
                 	cmp.password = response.data.password;
                 	cmp.confirmPassword = response.data.confirmPassword;
+                	AuthenticationService.SetUserFirstName(cmp.firstName);
+                	cmp.currentUserFirstName = cmp.firstName;
                 } else {
                 	cmp.username = "";
                 	cmp.firstName = "";
